@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Gal工具箱–Galgame入正指南–支持正版游戏</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+		}
+
+		:root {
+			--primary: #8a2be2;
+			--primary-dark: #6a1cb8;
+			--secondary: #ff6bcb;
+			--accent: #6c5ce7;
+			--dark: #2d3436;
+			--light: #f7f7f7;
+			--gray: #636e72;
+			--card-bg: rgba(255, 255, 255, 0.95);
+			--shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+			--gradient: linear-gradient(135deg, var(--primary), var(--accent));
+		}
+
+		body {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background-attachment: fixed;
+			color: var(--dark);
+			line-height: 1.6;
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
+
+		/* 头部样式 */
+		header {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(10px);
+			box-shadow: var(--shadow);
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+		}
+
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1rem 0;
+		}
+
+		.logo {
+			font-size: 1.8rem;
+			font-weight: 700;
+			color: var(--primary);
+			display: flex;
+			align-items: center;
+		}
+
+		.logo i {
+			margin-right: 10px;
+			color: var(--secondary);
+		}
+
+		.nav-links {
+			display: flex;
+			list-style: none;
+		}
+
+		.nav-links li {
+			margin-left: 2rem;
+		}
+
+		.nav-links a {
+			text-decoration: none;
+			color: var(--dark);
+			font-weight: 500;
+			transition: color 0.3s;
+			position: relative;
+		}
+
+		.nav-links a:hover {
+			color: var(--primary);
+		}
+
+		.nav-links a:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 2px;
+			bottom: -5px;
+			left: 0;
+			background: var(--gradient);
+			transition: width 0.3s;
+		}
+
+		.nav-links a:hover:after {
+			width: 100%;
+		}
+
+		/* 英雄区域 */
+		.hero {
+			padding: 5rem 0;
+			text-align: center;
+			color: white;
+		}
+
+		.hero h1 {
+			font-size: 3.5rem;
+			margin-bottom: 1rem;
+			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+		}
+
+		.hero p {
+			font-size: 1.2rem;
+			max-width: 700px;
+			margin: 0 auto 2rem;
+			opacity: 0.9;
+		}
+
+		.cta-button {
+			display: inline-block;
+			background: var(--gradient);
+			color: white;
+			padding: 12px 30px;
+			border-radius: 50px;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 1.1rem;
+			transition: transform 0.3s, box-shadow 0.3s;
+			box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+		}
+
+		.cta-button:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+		}
+
+		/* 平台区域 */
+		.platforms {
+			padding: 5rem 0;
+		}
+
+		.section-title {
+			text-align: center;
+			margin-bottom: 3rem;
+			color: white;
+			font-size: 2.5rem;
+		}
+
+		.platform-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 2rem;
+		}
+
+		.platform-card {
+			background: var(--card-bg);
+			border-radius: 15px;
+			overflow: hidden;
+			box-shadow: var(--shadow);
+			transition: transform 0.3s, box-shadow 0.3s;
+		}
+
+		.platform-card:hover {
+			transform: translateY(-10px);
+			box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+		}
+
+		.card-header {
+			padding: 1.5rem;
+			background: var(--gradient);
+			color: white;
+			display: flex;
+			align-items: center;
+		}
+
+		.card-header i {
+			font-size: 2rem;
+			margin-right: 1rem;
+		}
+
+		.card-header h3 {
+			font-size: 1.5rem;
+		}
+
+		.card-body {
+			padding: 1.5rem;
+		}
+
+		.card-body p {
+			margin-bottom: 1.5rem;
+			color: var(--gray);
+		}
+
+		.card-features {
+			list-style: none;
+			margin-bottom: 1.5rem;
+		}
+
+		.card-features li {
+			margin-bottom: 0.5rem;
+			display: flex;
+			align-items: center;
+		}
+
+		.card-features i {
+			color: var(--primary);
+			margin-right: 0.5rem;
+		}
+
+		.card-button {
+			display: block;
+			text-align: center;
+			background: var(--primary);
+			color: white;
+			padding: 10px;
+			border-radius: 8px;
+			text-decoration: none;
+			font-weight: 500;
+			transition: background 0.3s;
+		}
+
+		.card-button:hover {
+			background: var(--primary-dark);
+		}
+
+		/* 指南区域 */
+		.guide {
+			padding: 5rem 0;
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(10px);
+		}
+
+		.guide-steps {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 2rem;
+			margin-top: 3rem;
+		}
+
+		.step {
+			flex: 1;
+			min-width: 250px;
+			max-width: 300px;
+			text-align: center;
+			padding: 2rem;
+			background: var(--card-bg);
+			border-radius: 15px;
+			box-shadow: var(--shadow);
+		}
+
+		.step-number {
+			width: 50px;
+			height: 50px;
+			background: var(--gradient);
+			color: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			font-weight: 700;
+			margin: 0 auto 1rem;
+		}
+
+		.step h3 {
+			margin-bottom: 1rem;
+			color: var(--primary);
+		}
+
+		/* 页脚 */
+		footer {
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			padding: 3rem 0;
+			text-align: center;
+		}
+
+		.footer-content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.footer-logo {
+			font-size: 2rem;
+			margin-bottom: 1rem;
+		}
+
+		.footer-links {
+			display: flex;
+			list-style: none;
+			margin: 1.5rem 0;
+		}
+
+		.footer-links li {
+			margin: 0 1rem;
+		}
+
+		.footer-links a {
+			color: #ddd;
+			text-decoration: none;
+			transition: color 0.3s;
+		}
+
+		.footer-links a:hover {
+			color: var(--secondary);
+		}
+
+		.copyright {
+			margin-top: 1.5rem;
+			color: #aaa;
+			font-size: 0.9rem;
+		}
+
+		/* 响应式设计 */
+		@media (max-width: 768px) {
+			.nav-links {
+				display: none;
+			}
+
+			.hero h1 {
+				font-size: 2.5rem;
+			}
+
+			.platform-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.guide-steps {
+				flex-direction: column;
+				align-items: center;
+			}
+		}
+	</style>
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<!-- 头部导航 -->
+	<header>
+		<div class="container">
+			<nav>
+				<div class="logo">
+					<i class="fas fa-gamepad"></i>
+					<span>Galgame入正指南</span>
+				</div>
+				<ul class="nav-links">
+					<li><a href="#home">首页</a></li>
+					<li><a href="#platforms">购买平台</a></li>
+					<li><a href="#guide">购买指南</a></li>
+					<li><a href="#about">关于我们</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<!-- 英雄区域 -->
+	<section class="hero" id="home">
+		<div class="container">
+			<h1>支持Galgame正版购买</h1>
+			<p>为您推荐可靠的Galgame正版购买渠道，支持开发者创作更多优秀作品。在这里找到Steam、DLSite、Johren等主流平台的详细介绍和购买指南。</p>
+			<a href="#platforms" class="cta-button">探索购买平台</a>
+		</div>
+	</section>
+
+	<!-- 平台推荐区域 -->
+	<section class="platforms" id="platforms">
+		<div class="container">
+			<h2 class="section-title">正版购买平台</h2>
+			<div class="platform-grid">
+				<!-- Steam平台 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fab fa-steam"></i>
+						<h3>Steam</h3>
+					</div>
+					<div class="card-body">
+						<p>全球最大的数字游戏分发平台，拥有丰富的Galgame资源，经常有折扣活动。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 支持中文界面和游戏</li>
+							<li><i class="fas fa-check"></i> 频繁的折扣活动</li>
+							<li><i class="fas fa-check"></i> 社区功能完善</li>
+							<li><i class="fas fa-check"></i> 自动更新和云存档</li>
+						</ul>
+						<a href="https://store.steampowered.com/" class="card-button">访问Steam</a>
+					</div>
+				</div>
+
+				<!-- DLSite平台 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fas fa-shopping-cart"></i>
+						<h3>DLSite</h3>
+					</div>
+					<div class="card-body">
+						<p>日本最大的同人和独立游戏平台，包含大量日系Galgame和同人作品。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 日系游戏资源丰富</li>
+							<li><i class="fas fa-check"></i> 支持英文界面</li>
+							<li><i class="fas fa-check"></i> 经常有优惠券活动</li>
+							<li><i class="fas fa-check"></i> 同人作品种类繁多</li>
+						</ul>
+						<a href="https://www.dlsite.com/" class="card-button">访问DLSite</a>
+					</div>
+				</div>
+
+				<!-- Johren平台 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fas fa-globe-asia"></i>
+						<h3>Johren</h3>
+					</div>
+					<div class="card-body">
+						<p>专注于日本游戏海外发行的平台，提供多语言支持，包含许多独家作品。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 官方中文支持</li>
+							<li><i class="fas fa-check"></i> 独家游戏内容</li>
+							<li><i class="fas fa-check"></i> 多种支付方式</li>
+							<li><i class="fas fa-check"></i> 针对海外用户优化</li>
+						</ul>
+						<a href="https://www.johren.net/" class="card-button">访问Johren</a>
+					</div>
+				</div>
+
+				<!-- Denpasoft平台 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fas fa-desktop"></i>
+						<h3>Denpasoft</h3>
+					</div>
+					<div class="card-body">
+						<p>专注于视觉小说和Galgame的英文平台，提供无修正版本的成人向游戏。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 无修正版本游戏</li>
+							<li><i class="fas fa-check"></i> 英文界面支持</li>
+							<li><i class="fas fa-check"></i> DRM-Free下载</li>
+							<li><i class="fas fa-check"></i> 定期更新内容</li>
+						</ul>
+						<a href="https://denpasoft.com/" class="card-button">访问Denpasoft</a>
+					</div>
+				</div>
+
+				<!-- MangaGamer平台 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fas fa-book"></i>
+						<h3>MangaGamer</h3>
+					</div>
+					<div class="card-body">
+						<p>老牌视觉小说发行商，提供官方英文翻译的日系Galgame，历史悠久。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 官方英文翻译</li>
+							<li><i class="fas fa-check"></i> 历史悠久可靠</li>
+							<li><i class="fas fa-check"></i> 独家发行作品</li>
+							<li><i class="fas fa-check"></i> 定期特惠活动</li>
+						</ul>
+						<a href="https://www.mangagamer.com/" class="card-button">访问MangaGamer</a>
+					</div>
+				</div>
+
+				<!-- 官方网站直购 -->
+				<div class="platform-card">
+					<div class="card-header">
+						<i class="fas fa-home"></i>
+						<h3>官方直购</h3>
+					</div>
+					<div class="card-body">
+						<p>许多开发商提供官方网站直接购买选项，支持开发者获得更高分成。</p>
+						<ul class="card-features">
+							<li><i class="fas fa-check"></i> 支持开发者最多</li>
+							<li><i class="fas fa-check"></i> 往往有特典内容</li>
+							<li><i class="fas fa-check"></i> 第一时间获取更新</li>
+							<li><i class="fas fa-check"></i> 直接与开发者交流</li>
+						</ul>
+						<a href="#guide" class="card-button">查看指南</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 购买指南区域 -->
+	<section class="guide" id="guide">
+		<div class="container">
+			<h2 class="section-title">购买指南</h2>
+			<div class="guide-steps">
+				<div class="step">
+					<div class="step-number">1</div>
+					<h3>选择平台</h3>
+					<p>根据游戏可用性、语言支持、价格和支付方式选择合适的购买平台。</p>
+				</div>
+				<div class="step">
+					<div class="step-number">2</div>
+					<h3>创建账户</h3>
+					<p>在选定的平台上注册账户，并完成必要的验证步骤。</p>
+				</div>
+				<div class="step">
+					<div class="step-number">3</div>
+					<h3>选择支付方式</h3>
+					<p>根据平台支持的选项，选择合适的支付方式（信用卡、PayPal、支付宝等）。</p>
+				</div>
+				<div class="step">
+					<div class="step-number">4</div>
+					<h3>完成购买</h3>
+					<p>选择想要的游戏，加入购物车，完成支付流程。</p>
+				</div>
+				<div class="step">
+					<div class="step-number">5</div>
+					<h3>下载安装</h3>
+					<p>购买成功后，下载游戏并按照说明进行安装。</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 页脚 -->
+	<footer id="about">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-logo">
+					<i class="fas fa-gamepad"></i>
+				</div>
+				<p>致力于推广Galgame正版文化，支持游戏开发者持续创作</p>
+				<p class="copyright">© 2025 Galgame入正指南 | 本网站为爱好者创作，与各平台无商业关联</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// 平滑滚动效果
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				const targetId = this.getAttribute('href');
+				if(targetId === '#') return;
+				
+				const targetElement = document.querySelector(targetId);
+				if(targetElement) {
+					window.scrollTo({
+						top: targetElement.offsetTop - 80,
+						behavior: 'smooth'
+					});
+				}
+			});
+		});
+
+		// 卡片动画效果
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if(entry.isIntersecting) {
+					entry.target.style.opacity = '1';
+					entry.target.style.transform = 'translateY(0)';
+				}
+			});
+		}, observerOptions);
+
+		// 观察所有平台卡片
+		document.querySelectorAll('.platform-card').forEach(card => {
+			card.style.opacity = '0';
+			card.style.transform = 'translateY(20px)';
+			card.style.transition = 'opacity 0.5s, transform 0.5s';
+			observer.observe(card);
+		});
+
+		// 观察所有步骤卡片
+		document.querySelectorAll('.step').forEach(step => {
+			step.style.opacity = '0';
+			step.style.transform = 'translateY(20px)';
+			step.style.transition = 'opacity 0.5s, transform 0.5s';
+			observer.observe(step);
+		});
+	</script>
+</body>
+</html>
