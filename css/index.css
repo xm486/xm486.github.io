@@ -463,59 +463,109 @@
 	   
 }
 /* 伸缩式文字播放器 */
+/* 优化后的悬浮音乐播放器 */
 .player-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 48px; /* 收缩尺寸 */
-  height: 48px;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  width: 52px; /* 收缩尺寸 */
+  height: 52px;
   border-radius: 50%; /* 收缩为圆形 */
-  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-  box-shadow: 0 3px 12px rgba(108, 92, 231, 0.5);
+  background: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%); /* Gal风格粉紫渐变 */
+  box-shadow: 0 4px 16px rgba(255, 121, 198, 0.4);
   z-index: 10000;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 1rem; /* 展开后文字内边距 */
+  padding: 0 1.2rem; /* 展开后内边距 */
 }
-
 /* 展开状态：变宽+圆角矩形 */
 .player-container.active {
-  width: 280px; /* 展开宽度，适配文字长度 */
-  border-radius: 24px;
-  box-shadow: 0 5px 18px rgba(108, 92, 231, 0.6);
+  width: 300px; /* 展开宽度 */
+  border-radius: 30px;
+  box-shadow: 0 6px 20px rgba(255, 121, 198, 0.5);
 }
-
-/* 收缩时显示图标，展开时隐藏 */
+/* 播放器图标（收缩时显示） */
 .player-icon {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: white;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
 }
+/* 播放状态动画：图标微缩+发光 */
+.player-container.playing .player-icon {
+  transform: scale(0.9);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+/* 展开时隐藏图标 */
 .player-container.active .player-icon {
   opacity: 0;
 }
-
-/* 展开时显示文字，收缩时隐藏 */
+/* 播放信息文本（展开时显示） */
 .player-text {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: white;
   font-weight: 500;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  white-space: nowrap; /* 文字不换行 */
+  transition: opacity 0.3s ease 0.1s; /* 延迟显示 */
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
+/* 展开时显示文本 */
 .player-container.active .player-text {
   opacity: 1;
 }
-
-/* 隐藏原生audio控件（只负责播放） */
+/* 音乐标题高亮 */
+.player-title {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+/* 隐藏原生audio控件 */
 #floatPlayer {
   display: none;
+}
+
+/* 游戏标签容器 */
+/* 游戏标签容器（修复超出） */
+/* 游戏标签容器（彻底解决溢出） */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  max-width: 100%; /* 强制容器宽度不超过父元素 */
+  padding-right: 0.2rem; /* 预留一点边距 */
+}
+/* 标签样式（调整适配移动端） */
+.tag-item {
+  padding: 0.3rem 0.6rem; /* 缩小内边距，减少占用空间 */
+  background: #f0e9ff;
+  color: #6c5ce7;
+  border-radius: 20px;
+	  border: 1px solid #242424;
+  font-size: 0.75rem; /* 缩小字体，适配移动端 */
+  line-height: 1.2; /* 调整行高，避免文字挤压 */
+	  transition: background 0.2s ease;
+	  max-width: 100%; /* 强制容器宽度不超过父元素 */
+}
+/* 标签提示文字（同步缩小） */
+.tag-note {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 0.3rem;
+}
+.tag-item:hover {
+  background: #e0d4ff;
 }
