@@ -374,7 +374,7 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 		// 1. 初始化：先渲染再加载历史，确保DOM存在
 		function initChat() {
 			// 强制初始化欢迎语（解决无默认消息）
-			const welcomeMsg = '喵~ 主人你好呀，有什么想和我说的嘛~ 😺';
+			const welcomeMsg = '欧尼酱，你好呀，有什么想和我说的嘛~hiohio~';
 			if (!localStorage.getItem(STORAGE_KEY)) {
 				const initHistory = [{ type: 'ai', content: welcomeMsg, time: new Date().toISOString() }];
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(initHistory));
