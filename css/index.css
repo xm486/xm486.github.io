@@ -47,6 +47,7 @@
 			align-items: center;
 			gap: 0.5rem;
 		}
+	
 		.section-title::before {
 			content: "";
 			width: 0.3rem;
