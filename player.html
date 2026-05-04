@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>饭太硬影视 - 真实播放版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .search-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        .search-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .source-select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-poster {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .video-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-info {
+            padding: 12px;
+        }
+        
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .video-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        .player-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .player-modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        
+        .player-container {
+            flex: 1;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .player-container iframe,
+        .player-container video {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .episodes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .episode-btn {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .episode-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .episode-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+        
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍚 饭太硬影视 - 真实播放版</h1>
+    </div>
+    
+    <div class="container">
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="输入影视名称...">
+                <button class="search-btn" onclick="searchVideos()">🔍 搜索</button>
+            </div>
+            
+            <select class="source-select" id="sourceSelect">
+                <option value="ckplayer">CK资源</option>
+                <option value="1886">1886资源</option>
+                <option value="kuaikan">快看资源</option>
+                <option value="zuidazy">最大资源</option>
+                <option value="okzy">OK资源</option>
+            </select>
+            
+            <div class="info-box">
+                💡 <strong>使用说明：</strong><br>
+                1. 选择视频源<br>
+                2. 输入影视名称（如：斗罗大陆、庆余年）<br>
+                3. 点击搜索<br>
+                4. 选择视频即可播放
+            </div>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+    
+    <div class="player-modal" id="playerModal">
+        <div class="player-header">
+            <div id="playerTitle"></div>
+            <button class="close-btn" onclick="closePlayer()">×</button>
+        </div>
+        <div class="player-container" id="playerContainer"></div>
+        <div class="episodes" id="episodes"></div>
+    </div>
+    
+    <script>
+        // 视频源API配置
+        const API_SOURCES = {
+            ckplayer: {
+                name: 'CK资源',
+                search: 'https://ckzy.me/api.php/provide/vod/?ac=detail&wd=',
+                play: 'https://ckzy.me/api.php/provide/vod/?ac=detail&ids='
+            },
+            '1886': {
+                name: '1886资源',
+                search: 'https://cj.1886zy.co/inc/apijson_vod.php?ac=detail&wd=',
+                play: 'https://cj.1886zy.co/inc/apijson_vod.php?ac=detail&ids='
+            },
+            kuaikan: {
+                name: '快看资源',
+                search: 'https://kuaikan-api.com/api.php/provide/vod/?ac=detail&wd=',
+                play: 'https://kuaikan-api.com/api.php/provide/vod/?ac=detail&ids='
+            },
+            zuidazy: {
+                name: '最大资源',
+                search: 'https://www.zuidazy.net/api.php/provide/vod/?ac=detail&wd=',
+                play: 'https://www.zuidazy.net/api.php/provide/vod/?ac=detail&ids='
+            },
+            okzy: {
+                name: 'OK资源',
+                search: 'https://cj.okzy.tv/inc/apijson_vod.php?ac=detail&wd=',
+                play: 'https://cj.okzy.tv/inc/apijson_vod.php?ac=detail&ids='
+            }
+        };
+        
+        let currentVideo = null;
+        
+        // 搜索视频
+        async function searchVideos() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            const source = document.getElementById('sourceSelect').value;
+            const results = document.getElementById('results');
+            
+            if (!keyword) {
+                alert('请输入搜索关键词');
+                return;
+            }
+            
+            results.innerHTML = '<div class="loading">🔍 搜索中...</div>';
+            
+            try {
+                const api = API_SOURCES[source];
+                const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(api.search + encodeURIComponent(keyword))}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.list && data.list.length > 0) {
+                    displayResults(data.list, source);
+                } else {
+                    results.innerHTML = `
+                        <div class="error">
+                            <h3>😢 未找到结果</h3>
+                            <p>试试其他关键词或切换视频源</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('搜索失败:', error);
+                results.innerHTML = `
+                    <div class="error">
+                        <h3>⚠️ 搜索失败</h3>
+                        <p>${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 14px;">
+                            可能原因：<br>
+                            • 视频源不可用<br>
+                            • 网络连接问题<br>
+                            • 代理服务器限制<br><br>
+                            建议：切换其他视频源重试
+                        </p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 显示搜索结果
+        function displayResults(list, source) {
+            const results = document.getElementById('results');
+            results.innerHTML = list.map(video => `
+                <div class="video-card" onclick='playVideo(${JSON.stringify(video)}, "${source}")'>
+                    <div class="video-poster">
+                        ${video.vod_pic ? `<img src="${video.vod_pic}" onerror="this.style.display='none'">` : '🎬'}
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.vod_name}</div>
+                        <div class="video-meta">${video.vod_remarks || video.vod_year || '未知'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 播放视频
+        async function playVideo(video, source) {
+            currentVideo = video;
+            const modal = document.getElementById('playerModal');
+            const title = document.getElementById('playerTitle');
+            const container = document.getElementById('playerContainer');
+            const episodesDiv = document.getElementById('episodes');
+            
+            title.textContent = video.vod_name;
+            modal.classList.add('active');
+            container.innerHTML = '<div class="loading">⏳ 加载中...</div>';
+            episodesDiv.innerHTML = '';
+            
+            try {
+                // 获取详细信息
+                const api = API_SOURCES[source];
+                const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(api.play + video.vod_id)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.list && data.list[0]) {
+                    const detail = data.list[0];
+                    const playUrl = detail.vod_play_url;
+                    
+                    if (playUrl) {
+                        // 解析播放列表
+                        const episodes = parsePlayUrl(playUrl);
+                        
+                        if (episodes.length > 0) {
+                            // 显示剧集列表
+                            episodesDiv.innerHTML = episodes.map((ep, index) => `
+                                <button class="episode-btn ${index === 0 ? 'active' : ''}" 
+                                        onclick="playEpisode('${ep.url}', ${index})">
+                                    ${ep.name}
+                                </button>
+                            `).join('');
+                            
+                            // 播放第一集
+                            playEpisode(episodes[0].url, 0);
+                        } else {
+                            container.innerHTML = '<div class="error">无法解析播放地址</div>';
+                        }
+                    } else {
+                        container.innerHTML = '<div class="error">该视频暂无播放地址</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('播放失败:', error);
+                container.innerHTML = `<div class="error">播放失败: ${error.message}</div>`;
+            }
+        }
+        
+        // 解析播放地址
+        function parsePlayUrl(playUrl) {
+            const episodes = [];
+            const lines = playUrl.split('#');
+            
+            lines.forEach(line => {
+                const parts = line.split('$');
+                if (parts.length >= 2) {
+                    episodes.push({
+                        name: parts[0],
+                        url: parts[1]
+                    });
+                }
+            });
+            
+            return episodes;
+        }
+        
+        // 播放剧集
+        function playEpisode(url, index) {
+            const container = document.getElementById('playerContainer');
+            
+            // 更新按钮状态
+            document.querySelectorAll('.episode-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            // 判断播放方式
+            if (url.includes('.m3u8') || url.includes('.mp4')) {
+                // 直接播放
+                container.innerHTML = `
+                    <video controls autoplay>
+                        <source src="${url}" type="application/x-mpegURL">
+                        您的浏览器不支持视频播放
+                    </video>
+                `;
+            } else {
+                // 使用iframe
+                container.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen></iframe>`;
+            }
+        }
+        
+        // 关闭播放器
+        function closePlayer() {
+            const modal = document.getElementById('playerModal');
+            const container = document.getElementById('playerContainer');
+            modal.classList.remove('active');
+            container.innerHTML = '';
+        }
+        
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchVideos();
+            }
+        });
+    </script>
+</body>
+</html>
