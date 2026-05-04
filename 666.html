@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>饭太硬影视 - 在线观看</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            background: linear-gradient(45deg, #fff, #a8dadc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .search-bar {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 20px;
+            border-radius: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .sources {
+            padding: 0 20px 20px;
+        }
+        
+        .source-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        
+        .source-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .source-tabs::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .source-tab {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .source-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .source-tab.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .video-poster {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-info {
+            padding: 10px;
+        }
+        
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+        
+        .video-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 12px;
+            margin: 20px;
+        }
+        
+        .player-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .player-modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .player-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .player-container {
+            flex: 1;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .player-container video {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍚 饭太硬影视</h1>
+    </div>
+    
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="搜索影视剧..." id="searchInput">
+    </div>
+    
+    <div class="sources">
+        <div class="source-tabs" id="sourceTabs"></div>
+    </div>
+    
+    <div class="content">
+        <div id="videoList"></div>
+    </div>
+    
+    <div class="player-modal" id="playerModal">
+        <div class="player-header">
+            <div class="player-title" id="playerTitle"></div>
+            <button class="close-btn" onclick="closePlayer()">×</button>
+        </div>
+        <div class="player-container">
+            <video id="videoPlayer" controls autoplay></video>
+        </div>
+    </div>
+    
+    <script>
+        // 多个备用API地址
+        const API_URLS = [
+            'http://www.xn--sss604efuw.com/tv',  // Punycode格式
+            'http://www.饭太硬.com/tv',
+            'https://gh-proxy.com/https://raw.githubusercontent.com/fantaiying7/TVBox/main/tv.json'  // GitHub备用源
+        ];
+        
+        let config = null;
+        let currentSource = null;
+        let searchTimeout = null;
+        
+        // 加载配置
+        async function loadConfig() {
+            const videoList = document.getElementById('videoList');
+            videoList.innerHTML = '<div class="loading">🔄 正在加载配置...</div>';
+            
+            // 尝试所有API地址
+            for (let i = 0; i < API_URLS.length; i++) {
+                try {
+                    console.log(`尝试加载: ${API_URLS[i]}`);
+                    
+                    const response = await fetch(API_URLS[i], {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    
+                    const text = await response.text();
+                    console.log('响应长度:', text.length);
+                    
+                    // 尝试直接解析JSON
+                    try {
+                        config = JSON.parse(text);
+                    } catch (e) {
+                        // 提取Base64编码的JSON
+                        const base64Match = text.match(/eyJ[A-Za-z0-9+/=]+/);
+                        if (base64Match) {
+                            const jsonStr = atob(base64Match[0]);
+                            config = JSON.parse(jsonStr);
+                        } else {
+                            throw new Error('无法解析配置格式');
+                        }
+                    }
+                    
+                    console.log('配置加载成功，源数量:', config.sites?.length || 0);
+                    renderSourceTabs();
+                    showEmptyState();
+                    return; // 成功后退出
+                    
+                } catch (error) {
+                    console.error(`加载失败 (${API_URLS[i]}):`, error);
+                    
+                    // 如果是最后一个URL也失败了
+                    if (i === API_URLS.length - 1) {
+                        // 使用本地演示数据
+                        loadDemoConfig();
+                    }
+                }
+            }
+        }
+        
+        // 加载演示配置
+        function loadDemoConfig() {
+            console.log('使用演示配置');
+            config = {
+                sites: [
+                    {"key":"玩偶","name":"👽玩偶哥┃4K弹幕","type":3,"api":"csp_WoGGGuard","searchable":1,"quickSearch":1},
+                    {"key":"立播","name":"🌟立播┃秒播","type":3,"api":"csp_LibvioGuard","searchable":1,"quickSearch":1},
+                    {"key":"厂长","name":"📔厂长┃秒播","type":3,"api":"csp_NewCzGuard","searchable":1,"quickSearch":1},
+                    {"key":"文采","name":"💮文采┃秒播","type":3,"api":"csp_JpysGuard","searchable":1,"quickSearch":1},
+                    {"key":"原创","name":"☀原创┃秒播","type":3,"api":"csp_YCyzGuard","searchable":1,"quickSearch":1},
+                    {"key":"比特","name":"🍄比特┃秒播","type":3,"api":"csp_BttwooGuard","searchable":1,"quickSearch":1},
+                    {"key":"糯米","name":"🍓糯米┃多线","type":3,"api":"csp_NmyswvGuard","searchable":1,"quickSearch":1},
+                    {"key":"热播","name":"📺热播┃多线","type":3,"api":"csp_AppTGuard","searchable":1,"quickSearch":1},
+                    {"key":"剧圈","name":"🐻剧圈┃多线","type":3,"api":"csp_AppSxGuard","searchable":1,"quickSearch":1},
+                    {"key":"视界","name":"🍙视界┃多线","type":3,"api":"csp_AppSxGuard","searchable":1,"quickSearch":1}
+                ]
+            };
+            
+            document.getElementById('videoList').innerHTML = `
+                <div class="error">
+                    <h3>💡 演示模式</h3>
+                    <p>由于跨域限制，当前使用演示数据</p>
+                    <p style="margin-top: 10px; font-size: 14px;">
+                        实际使用建议：<br>
+                        1. 使用TVBox等专用应用<br>
+                        2. 部署到支持CORS的服务器<br>
+                        3. 使用浏览器插件绕过CORS
+                    </p>
+                </div>
+            `;
+            
+            renderSourceTabs();
+        }
+        
+        // 渲染源标签
+        function renderSourceTabs() {
+            const tabs = document.getElementById('sourceTabs');
+            const searchableSources = config.sites.filter(site => site.searchable === 1);
+            
+            tabs.innerHTML = searchableSources.map((site, index) => `
+                <button class="source-tab ${index === 0 ? 'active' : ''}" 
+                        onclick="selectSource('${site.key}', this)">
+                    ${site.name}
+                </button>
+            `).join('');
+            
+            if (searchableSources.length > 0) {
+                currentSource = searchableSources[0];
+            }
+        }
+        
+        // 选择源
+        function selectSource(key, element) {
+            document.querySelectorAll('.source-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            currentSource = config.sites.find(site => site.key === key);
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.value.trim()) {
+                searchVideos(searchInput.value.trim());
+            }
+        }
+        
+        // 搜索视频
+        async function searchVideos(keyword) {
+            if (!currentSource || !keyword) return;
+            
+            const videoList = document.getElementById('videoList');
+            videoList.innerHTML = '<div class="loading">🔍 搜索中...</div>';
+            
+            try {
+                // 这里需要根据实际的API调用方式来实现
+                // TVBox的源通常需要特定的插件来解析
+                // 这里仅作演示，显示模拟数据
+                
+                setTimeout(() => {
+                    videoList.innerHTML = `
+                        <div class="error">
+                            <h3>💡 提示</h3>
+                            <p>此演示版本展示了界面设计</p>
+                            <p style="margin-top: 10px; font-size: 14px;">
+                                实际的视频数据需要通过TVBox插件系统来解析<br>
+                                当前源: ${currentSource.name}<br>
+                                搜索关键词: ${keyword}
+                            </p>
+                        </div>
+                    `;
+                }, 500);
+                
+            } catch (error) {
+                console.error('搜索失败:', error);
+                videoList.innerHTML = `
+                    <div class="error">
+                        <h3>⚠️ 搜索失败</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 显示空状态
+        function showEmptyState() {
+            document.getElementById('videoList').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎬</div>
+                    <h3>开始搜索</h3>
+                    <p>在上方输入框中搜索您想看的影视剧</p>
+                </div>
+            `;
+        }
+        
+        // 播放视频
+        function playVideo(title, url) {
+            const modal = document.getElementById('playerModal');
+            const player = document.getElementById('videoPlayer');
+            const playerTitle = document.getElementById('playerTitle');
+            
+            playerTitle.textContent = title;
+            player.src = url;
+            modal.classList.add('active');
+        }
+        
+        // 关闭播放器
+        function closePlayer() {
+            const modal = document.getElementById('playerModal');
+            const player = document.getElementById('videoPlayer');
+            
+            player.pause();
+            player.src = '';
+            modal.classList.remove('active');
+        }
+        
+        // 搜索输入事件
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const keyword = e.target.value.trim();
+            
+            if (keyword) {
+                searchTimeout = setTimeout(() => {
+                    searchVideos(keyword);
+                }, 500);
+            } else {
+                showEmptyState();
+            }
+        });
+        
+        // 初始化
+        loadConfig();
+    </script>
+</body>
+</html>
