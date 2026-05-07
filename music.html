@@ -357,9 +357,9 @@
             flex-shrink: 0;
             margin-left: 10px;
         }
-        
         /* 添加到歌单按钮 */
-        .add-to-playlist-btn {
+        .add-to-playlist-btn,
+        .download-song-btn {
             width: 28px;
             height: 28px;
             border: 1px solid var(--glass-border);
@@ -377,12 +377,24 @@
             transition: all var(--transition-fast);
         }
         
-        .add-to-playlist-btn:active {
+        .download-song-btn {
+            color: #34c759;
+        }
+        
+        .add-to-playlist-btn:active,
+        .download-song-btn:active {
             transform: scale(0.9);
             background: var(--accent-primary);
             color: white;
             border-color: var(--accent-primary);
         }
+        
+        .download-song-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         
         /* 从歌单移除按钮 */
         .remove-from-playlist-btn {
@@ -1329,6 +1341,208 @@
             box-shadow: var(--neon-glow);
         }
         
+        /* QQ 用户登录卡片 */
+        .profile-login-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 26px;
+            padding: 20px;
+            margin-bottom: 24px;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(0, 245, 212, 0.22), transparent 34%),
+                radial-gradient(circle at 86% 20%, rgba(255, 0, 110, 0.22), transparent 32%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.045));
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+        
+        .profile-login-card::before {
+            content: '';
+            position: absolute;
+            inset: -60px -80px auto auto;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            background: conic-gradient(from 135deg, rgba(0, 95, 219, 0.35), rgba(0, 245, 212, 0.2), rgba(255, 0, 110, 0.26), rgba(0, 95, 219, 0.35));
+            filter: blur(8px);
+            opacity: 0.75;
+            pointer-events: none;
+            transition: all var(--transition-slow);
+        }
+        
+        .profile-login-card.logged-in {
+            animation: profileLoginPop 0.58s cubic-bezier(0.2, 1.2, 0.3, 1);
+            border-color: rgba(0, 245, 212, 0.34);
+            box-shadow: 0 22px 55px rgba(0, 95, 219, 0.24), 0 0 34px rgba(0, 245, 212, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+        
+        .profile-login-card.logged-in::before {
+            inset: -50px -54px auto auto;
+            opacity: 0.95;
+            animation: profileAuraSpin 9s linear infinite;
+        }
+        
+        @keyframes profileLoginPop {
+            0% { transform: translateY(8px) scale(0.97); opacity: 0.72; }
+            65% { transform: translateY(-2px) scale(1.015); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        
+        @keyframes profileAuraSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .profile-card-top {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            z-index: 1;
+        }
+        
+        .profile-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 95, 219, 0.9), rgba(0, 245, 212, 0.55));
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            box-shadow: 0 12px 30px rgba(0, 95, 219, 0.28);
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-login-card.logged-in .profile-avatar {
+            animation: avatarFloat 3.6s ease-in-out infinite;
+            box-shadow: 0 14px 36px rgba(0, 245, 212, 0.24), 0 0 0 4px rgba(0, 245, 212, 0.08);
+        }
+        
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-4px) rotate(1deg); }
+        }
+        
+        .profile-meta {
+            min-width: 0;
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .profile-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .profile-login-form {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .qq-input {
+            flex: 1;
+            min-width: 0;
+            height: 44px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(0, 0, 0, 0.18);
+            color: var(--text-primary);
+            border-radius: 16px;
+            padding: 0 14px;
+            outline: none;
+            font-size: 15px;
+            caret-color: var(--accent-neon);
+        }
+        
+        .qq-input:focus {
+            border-color: rgba(0, 245, 212, 0.7);
+            box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.15);
+        }
+        
+        .qq-login-btn,
+        .qq-logout-btn {
+            height: 44px;
+            border: none;
+            border-radius: 16px;
+            padding: 0 18px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .qq-login-btn {
+            background: linear-gradient(135deg, #005fdb, #00f5d4);
+            box-shadow: 0 10px 24px rgba(0, 95, 219, 0.28);
+        }
+        
+        .qq-logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-secondary);
+        }
+        
+        .qq-login-btn:active,
+        .qq-logout-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .profile-stats {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .profile-stat {
+            padding: 10px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.075);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+        
+        .profile-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-neon);
+        }
+        
+        .profile-stat-label {
+            margin-top: 2px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        
         /* 错误提示 */
         .error-toast {
             position: fixed;
@@ -1395,113 +1609,418 @@
             display: block;
         }
         
-        /* 响应式调整 */
-        @media (max-width: 375px) {
+            /* 响应式调整 */
+            @media (max-width: 375px) {
+                .full-cover {
+                    width: 240px;
+                    height: 240px;
+                }
+                
+                .full-title {
+                    font-size: 20px;
+                }
+                
+                .full-artist {
+                    font-size: 16px;
+                }
+                
+                .full-controls {
+                    gap: 20px;
+                }
+                
+                .full-play-btn {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 30px;
+                }
+                
+                .recommend-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .mini-player {
+                    padding: 8px 12px;
+                    height: 60px;
+                }
+                
+                .mini-cover {
+                    width: 44px;
+                    height: 44px;
+                }
+                
+                .mini-title {
+                    font-size: 14px;
+                }
+                
+                .mini-artist {
+                    font-size: 12px;
+                }
+                
+                .control-btn {
+                    font-size: 20px;
+                    padding: 6px;
+                }
+                
+                .play-btn {
+                    font-size: 24px;
+                }
+            }
+            
+            @media (min-width: 768px) {
+                .recommend-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                
+                .full-cover {
+                    width: 320px;
+                    height: 320px;
+                }
+                
+                .mini-player {
+                    padding: 12px 20px;
+                    height: 80px;
+                }
+                
+                .mini-cover {
+                    width: 56px;
+                    height: 56px;
+                }
+                
+                .mini-title {
+                    font-size: 16px;
+                }
+                
+                .mini-artist {
+                    font-size: 14px;
+                }
+            }
+            
+            /* 底部安全区域 - 使用更可靠的方案 */
+            @supports (padding-bottom: env(safe-area-inset-bottom)) {
+                .bottom-tab {
+                    padding-bottom: env(safe-area-inset-bottom, 0px);
+                }
+                
+                .mini-player {
+                    bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
+                }
+                
+                .main-content {
+                    padding-bottom: calc(var(--player-bar-height) + var(--tab-height) + env(safe-area-inset-bottom, 0px) + 20px);
+                }
+                
+                /* 当迷你播放器隐藏时 */
+                .mini-player.hidden {
+                    bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
+                    transform: translateY(100%);
+                }
+            }
+            
+            /* ============================================
+               SVG Icon System (Lucide-style)
+               ============================================ */
+            .icon-svg {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+            
+            .icon-svg svg {
+                width: 100%;
+                height: 100%;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            
+            .icon-svg.icon-sm { width: 16px; height: 16px; }
+            .icon-svg.icon-md { width: 20px; height: 20px; }
+            .icon-svg.icon-lg { width: 24px; height: 24px; }
+            .icon-svg.icon-xl { width: 32px; height: 32px; }
+            
+            /* ============================================
+               Music Source Badge System
+               ============================================ */
+            .source-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                flex-shrink: 0;
+                margin-left: 4px;
+                vertical-align: middle;
+                overflow: hidden;
+            }
+            
+            .source-badge img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            
+            .source-badge-qq {
+                background: #31c27c;
+                box-shadow: 0 0 6px rgba(49, 194, 124, 0.4);
+            }
+            
+            .source-badge-netease {
+                background: #c20c0c;
+                box-shadow: 0 0 6px rgba(194, 12, 12, 0.4);
+            }
+            
+            .source-badges {
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                flex-shrink: 0;
+            }
+            
+            /* Large badge for playlists */
+            .source-badge-lg {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+            }
+            
+            /* ============================================
+               Cover Click → Lyrics Toggle
+               ============================================ */
             .full-cover {
-                width: 240px;
-                height: 240px;
+                cursor: pointer;
+                position: relative;
             }
             
-            .full-title {
-                font-size: 20px;
+            .full-cover .lyrics-hint {
+                position: absolute;
+                bottom: 8px;
+                right: 8px;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                opacity: 0.7;
+                transition: opacity var(--transition-fast);
+                pointer-events: none;
             }
             
-            .full-artist {
-                font-size: 16px;
+            .full-cover:active .lyrics-hint {
+                opacity: 1;
             }
             
-            .full-controls {
-                gap: 20px;
+            /* ============================================
+               Enhanced Glassmorphism & Animations
+               ============================================ */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(16px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             
-            .full-play-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 30px;
+            @keyframes fadeInScale {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
             }
             
-            .recommend-grid {
-                grid-template-columns: 1fr;
+            @keyframes shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
             }
             
-            .mini-player {
-                padding: 8px 12px;
-                height: 60px;
+            @keyframes slideInFromBottom {
+                from { transform: translateY(100%); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
             }
             
-            .mini-cover {
-                width: 44px;
-                height: 44px;
+            .animate-fade-in-up {
+                animation: fadeInUp 0.3s ease-out forwards;
             }
             
-            .mini-title {
-                font-size: 14px;
+            .animate-fade-in-scale {
+                animation: fadeInScale 0.25s ease-out forwards;
             }
             
-            .mini-artist {
-                font-size: 12px;
+            /* Stagger animation for song lists */
+            .song-item {
+                animation: fadeInUp 0.3s ease-out forwards;
+                opacity: 0;
             }
             
-            .control-btn {
-                font-size: 20px;
-                padding: 6px;
+            .song-item:nth-child(1) { animation-delay: 0.03s; }
+            .song-item:nth-child(2) { animation-delay: 0.06s; }
+            .song-item:nth-child(3) { animation-delay: 0.09s; }
+            .song-item:nth-child(4) { animation-delay: 0.12s; }
+            .song-item:nth-child(5) { animation-delay: 0.15s; }
+            .song-item:nth-child(6) { animation-delay: 0.18s; }
+            .song-item:nth-child(7) { animation-delay: 0.21s; }
+            .song-item:nth-child(8) { animation-delay: 0.24s; }
+            .song-item:nth-child(9) { animation-delay: 0.27s; }
+            .song-item:nth-child(10) { animation-delay: 0.3s; }
+            .song-item:nth-child(11) { animation-delay: 0.33s; }
+            .song-item:nth-child(12) { animation-delay: 0.36s; }
+            
+            .recommend-card {
+                animation: fadeInScale 0.3s ease-out forwards;
+                opacity: 0;
             }
             
-            .play-btn {
-                font-size: 24px;
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .recommend-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .recommend-card:nth-child(1) { animation-delay: 0.05s; }
+            .recommend-card:nth-child(2) { animation-delay: 0.1s; }
+            .recommend-card:nth-child(3) { animation-delay: 0.15s; }
+            .recommend-card:nth-child(4) { animation-delay: 0.2s; }
+            
+            .playlist-card {
+                animation: fadeInUp 0.3s ease-out forwards;
+                opacity: 0;
             }
             
-            .full-cover {
-                width: 320px;
-                height: 320px;
+            .playlist-card:nth-child(1) { animation-delay: 0.05s; }
+            .playlist-card:nth-child(2) { animation-delay: 0.1s; }
+            .playlist-card:nth-child(3) { animation-delay: 0.15s; }
+            
+            /* Enhanced recommend cards */
+            .recommend-card {
+                transition: all var(--transition-normal);
+                will-change: transform;
             }
             
-            .mini-player {
-                padding: 12px 20px;
-                height: 80px;
+            .recommend-card:active {
+                transform: scale(0.96);
+                box-shadow: 0 0 24px rgba(255, 0, 110, 0.35);
             }
             
-            .mini-cover {
-                width: 56px;
-                height: 56px;
+            /* Enhanced song items with ripple effect */
+            .song-item {
+                transition: all var(--transition-fast);
+                position: relative;
+                overflow: hidden;
             }
             
-            .mini-title {
-                font-size: 16px;
+            .song-item::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.08);
+                transform: translate(-50%, -50%);
+                transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+                opacity: 0;
             }
             
-            .mini-artist {
-                font-size: 14px;
-            }
-        }
-        
-        /* 底部安全区域 - 使用更可靠的方案 */
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-            .bottom-tab {
-                padding-bottom: env(safe-area-inset-bottom, 0px);
+            .song-item:active::after {
+                width: 300px;
+                height: 300px;
+                opacity: 1;
+                transition: width 0s, height 0s, opacity 0s;
             }
             
-            .mini-player {
-                bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
+            /* Enhanced playlist cards */
+            .playlist-card {
+                position: relative;
+                overflow: hidden;
             }
             
-            .main-content {
-                padding-bottom: calc(var(--player-bar-height) + var(--tab-height) + env(safe-area-inset-bottom, 0px) + 20px);
+            .playlist-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(255, 0, 110, 0.05), rgba(131, 56, 236, 0.05));
+                opacity: 0;
+                transition: opacity var(--transition-normal);
+                pointer-events: none;
             }
             
-            /* 当迷你播放器隐藏时 */
-            .mini-player.hidden {
-                bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
-                transform: translateY(100%);
+            .playlist-card:active::before {
+                opacity: 1;
             }
-        }
-    </style>
+            
+            /* Song name with source badge row */
+            .song-name-row {
+                display: flex;
+                align-items: center;
+                min-width: 0;
+            }
+            
+            .song-name-row .song-name {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+            }
+            
+            /* Source badge in playlist title */
+            .playlist-title-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            
+            .playlist-title-row .playlist-title {
+                flex: 1;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            /* Play button icon */
+            .btn-icon-play {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Enhanced search input focus */
+            .search-container {
+                transition: all var(--transition-normal);
+            }
+            
+            .search-container:focus-within {
+                background: rgba(255, 255, 255, 0.12);
+                border-color: var(--accent-primary);
+                box-shadow: 0 0 0 3px rgba(255, 0, 110, 0.2);
+                transform: scale(1.01);
+            }
+            
+            /* Reduced motion preference */
+            @media (prefers-reduced-motion: reduce) {
+                *, *::before, *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        </style>
 </head>
 <body>
     <!-- 星空背景 -->
@@ -1528,8 +2047,8 @@
         <!-- 顶部标题栏 -->
         <header class="header">
             <div class="app-title">次元音乐</div>
-            <button class="header-search-btn" id="searchPageBtn">
-                <span>🔍</span>
+            <button class="header-search-btn" id="searchPageBtn" aria-label="搜索">
+                <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
             </button>
         </header>
         
@@ -1561,13 +2080,14 @@
                 <div class="section-title" style="margin-top: 25px;">导入歌单</div>
             <input type="text" class="modal-input" id="importNameInput" placeholder="歌单名称（选填，不填则自动命名）" style="margin-bottom: 10px;">
             <div class="search-container">
-                <input type="text" class="modal-input" id="importInput" placeholder="粘贴QQ音乐歌单链接或ID">
-                <button class="search-btn" id="importBtn">
-                    <span>📥</span>
+                <input type="text" class="modal-input" id="importInput" placeholder="粘贴QQ音乐或网易云音乐歌单链接或ID">
+                <button class="search-btn" id="importBtn" aria-label="导入歌单">
+                    <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></span>
                 </button>
             </div>
             <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 10px;">
-                支持QQ音乐歌单链接，例如 https://i2.y.qq.com/...?id=9533799794
+                支持QQ音乐歌单链接，例如 https://i2.y.qq.com/...?id=9533799794<br>
+                支持网易云音乐歌单链接，例如 https://y.music.163.com/m/playlist?id=9084225808
             </p>
             </div>
             
@@ -1575,8 +2095,8 @@
             <div class="page" id="searchPage">
                 <div class="search-container">
                     <input type="text" class="search-input" id="searchInput" placeholder="搜索歌曲、歌手..." autocomplete="off">
-                    <button class="search-btn" id="searchBtn">
-                        <span>🔍</span>
+                    <button class="search-btn" id="searchBtn" aria-label="搜索">
+                        <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
                     </button>
                 </div>
                 
@@ -1586,7 +2106,7 @@
                 </div>
                 
                 <div class="empty-state" id="searchEmpty">
-                    <span class="icon">🎵</span>
+                    <span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
                     <p>搜索你喜欢的二次元歌曲</p>
                 </div>
                 
@@ -1597,10 +2117,42 @@
             
             <!-- 我的页面 -->
             <div class="page" id="profilePage">
+                <div class="profile-login-card" id="profileLoginCard">
+                    <div class="profile-card-top">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                        </div>
+                        <div class="profile-meta">
+                            <div class="profile-name" id="profileName">未登录</div>
+                            <div class="profile-subtitle" id="profileSubtitle">输入 QQ 号同步头像和昵称</div>
+                        </div>
+                        <button class="qq-logout-btn" id="qqEditNameBtn" style="display:none;">改名</button>
+                        <button class="qq-logout-btn" id="qqLogoutBtn" style="display:none;">退出</button>
+                    </div>
+                    <div class="profile-login-form" id="qqLoginForm">
+                        <input class="qq-input" id="qqInput" type="tel" inputmode="numeric" placeholder="请输入 QQ 号" maxlength="12">
+                        <button class="qq-login-btn" id="qqLoginBtn">登录</button>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profilePlaylistCount">0</div>
+                            <div class="profile-stat-label">歌单</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profileHistoryCount">0</div>
+                            <div class="profile-stat-label">历史</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profileSourceLabel">QQ</div>
+                            <div class="profile-stat-label">账号源</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="section-title">播放历史</div>
                 <div class="song-list" id="historyList">
                     <div class="empty-state">
-                        <span class="icon">📚</span>
+                        <span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
                         <p>暂无播放历史</p>
                     </div>
                 </div>
@@ -1611,7 +2163,7 @@
         <div class="mini-player" id="miniPlayer">
             <div class="mini-player-info">
                 <div class="mini-cover" id="miniCover">
-                    <span>🎵</span>
+                    <span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
                 </div>
                 <div class="mini-text">
                     <div class="mini-title" id="miniTitle">未播放任何歌曲</div>
@@ -1619,28 +2171,34 @@
                 </div>
             </div>
             <div class="mini-controls">
-                <button class="control-btn" id="prevBtn">⏮</button>
-                <button class="control-btn play-btn" id="playBtn">▶</button>
-                <button class="control-btn" id="nextBtn">⏭</button>
+                <button class="control-btn" id="prevBtn" aria-label="上一首">
+                    <span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg></span>
+                </button>
+                <button class="control-btn play-btn" id="playBtn" aria-label="播放">
+                    <span class="icon-svg icon-lg btn-icon-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+                </button>
+                <button class="control-btn" id="nextBtn" aria-label="下一首">
+                    <span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg></span>
+                </button>
             </div>
         </div>
         
         <!-- 底部导航栏 -->
         <nav class="bottom-tab">
             <div class="tab-item active" data-tab="home">
-                <span class="tab-icon">🏠</span>
+                <span class="tab-icon icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
                 <span>首页</span>
             </div>
             <div class="tab-item" data-tab="playlist">
-                <span class="tab-icon">📂</span>
+                <span class="tab-icon icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
                 <span>歌单</span>
             </div>
             <div class="tab-item" data-tab="search">
-                <span class="tab-icon">🔍</span>
+                <span class="tab-icon icon-svg icon-lg"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
                 <span>搜索</span>
             </div>
             <div class="tab-item" data-tab="profile">
-                <span class="tab-icon">👤</span>
+                <span class="tab-icon icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
                 <span>我的</span>
             </div>
         </nav>
@@ -1663,15 +2221,21 @@
     <!-- 全屏播放器 -->
     <div class="full-player" id="fullPlayer">
         <div class="full-player-header">
-            <button class="back-btn" id="backBtn">◀</button>
-            <div class="player-title">正在播放</div>
-            <button class="lyrics-toggle" id="lyricsToggle">词</button>
+            <button class="back-btn" id="backBtn" aria-label="返回">
+                <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></span>
+            </button>
+            <button class="back-btn" id="downloadCurrentBtn" aria-label="下载当前歌曲" title="下载当前歌曲">
+                <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></span>
+            </button>
         </div>
         
         <div class="full-player-content">
             <div class="full-cover-container">
                 <div class="full-cover" id="fullCover">
-                    <span>🎵</span>
+                    <span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
+                    <div class="lyrics-hint" id="lyricsHint">
+                        <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
+                    </div>
                 </div>
             </div>
             
@@ -1695,15 +2259,21 @@
                 
                 <!-- 控制按钮 -->
                 <div class="full-controls">
-                    <button class="full-control-btn" id="fullPrevBtn">⏮</button>
-                    <button class="full-control-btn full-play-btn" id="fullPlayBtn">▶</button>
-                    <button class="full-control-btn" id="fullNextBtn">⏭</button>
+                    <button class="full-control-btn" id="fullPrevBtn" aria-label="上一首">
+                        <span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg></span>
+                    </button>
+                    <button class="full-control-btn full-play-btn" id="fullPlayBtn" aria-label="播放">
+                        <span class="icon-svg icon-xl btn-icon-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+                    </button>
+                    <button class="full-control-btn" id="fullNextBtn" aria-label="下一首">
+                        <span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg></span>
+                    </button>
                 </div>
                 
                 <!-- 音质选择 -->
                 <div class="quality-container">
                     <div class="quality-header">
-                        <span class="quality-icon">🎧</span>
+                        <span class="quality-icon icon-svg icon-md"><svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg></span>
                         <span class="quality-text">音质</span>
                     </div>
                     <div class="quality-buttons" id="qualityButtons">
@@ -1717,7 +2287,7 @@
                 <!-- 音量控制 -->
                 <div class="volume-container">
                     <div class="volume-header">
-                        <span class="volume-icon">🔊</span>
+                        <span class="volume-icon icon-svg icon-md"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span>
                         <span class="volume-text">音量</span>
                     </div>
                     <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
@@ -1771,7 +2341,8 @@
                 duration: '03:57',
                 songmid: '0029fwQT2xorQj',
                 albummid: '0021sslV0YY2Bc',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000021sslV0YY2Bc.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000021sslV0YY2Bc.jpg',
+                source: 'qq'
             },
             {
                 id: 2,
@@ -1781,7 +2352,8 @@
                 duration: '03:49',
                 songmid: '002hnjGu2MBXtA',
                 albummid: '001vS2hR4VI0oi',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000001vS2hR4VI0oi.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000001vS2hR4VI0oi.jpg',
+                source: 'qq'
             },
             {
                 id: 3,
@@ -1791,7 +2363,8 @@
                 duration: '05:32',
                 songmid: '002ycT6y0q85ji',
                 albummid: '002Uflih088lIb',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000002Uflih088lIb.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000002Uflih088lIb.jpg',
+                source: 'qq'
             },
             {
                 id: 4,
@@ -1801,7 +2374,8 @@
                 duration: '04:32',
                 songmid: '000TwDhG4Ic4vQ',
                 albummid: '000sotXf0sFdCf',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000000sotXf0sFdCf.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000000sotXf0sFdCf.jpg',
+                source: 'qq'
             },
             {
                 id: 5,
@@ -1811,7 +2385,8 @@
                 duration: '02:58',
                 songmid: '002ZOqS73GwD0S',
                 albummid: '002ZOqS73GwD0S',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000002ZOqS73GwD0S.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000002ZOqS73GwD0S.jpg',
+                source: 'qq'
             },
             {
                 id: 6,
@@ -1821,7 +2396,8 @@
                 duration: '04:15',
                 songmid: '001yjooD07mpsM',
                 albummid: '0001AKlN21C2LS',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000001AKlN21C2LS.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000001AKlN21C2LS.jpg',
+                source: 'qq'
             },
             {
                 id: 7,
@@ -1831,7 +2407,8 @@
                 duration: '05:07',
                 songmid: '002sAmX54XAXiQ',
                 albummid: '0029PCJM1LQMaH',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000029PCJM1LQMaH.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M0000029PCJM1LQMaH.jpg',
+                source: 'qq'
             },
             {
                 id: 8,
@@ -1841,7 +2418,8 @@
                 duration: '04:35',
                 songmid: '003lUTWi4APlUs',
                 albummid: '004CDfth4Vw3Sp',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004CDfth4Vw3Sp.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004CDfth4Vw3Sp.jpg',
+                source: 'qq'
             },
             {
                 id: 9,
@@ -1851,7 +2429,8 @@
                 duration: '05:19',
                 songmid: '000L5FVi1L21lN',
                 albummid: '004CDfth4Vw3Sp',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004CDfth4Vw3Sp.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004CDfth4Vw3Sp.jpg',
+                source: 'qq'
             },
             {
                 id: 10,
@@ -1861,7 +2440,8 @@
                 duration: '05:04',
                 songmid: '001reKax24mb0k',
                 albummid: '004DRfOZ4QqPmf',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004DRfOZ4QqPmf.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000004DRfOZ4QqPmf.jpg',
+                source: 'qq'
             },
             {
                 id: 11,
@@ -1871,7 +2451,8 @@
                 duration: '05:33',
                 songmid: '002tfbql3DrAe8',
                 albummid: '001uaniI0VY17D',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000001uaniI0VY17D.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000001uaniI0VY17D.jpg',
+                source: 'qq'
             },
             {
                 id: 12,
@@ -1881,7 +2462,8 @@
                 duration: '04:22',
                 songmid: '001qrnDh07g133',
                 albummid: '003TMQJb2qvaX7',
-                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000003TMQJb2qvaX7.jpg'
+                coverUrl: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000003TMQJb2qvaX7.jpg',
+                source: 'qq'
             }
         ];
         
@@ -1890,6 +2472,7 @@
             constructor() {
                 // 状态变量
                 this.currentSongIndex = -1;
+                this.currentSong = null;
                 this.isPlaying = false;
                 this.isDraggingProgress = false;
                 this.searchResults = [];
@@ -1899,6 +2482,7 @@
                 this.currentLyricIndex = -1;
                 this.lyricsVisible = false;
                 this.currentQuality = '320'; // 默认高品音质
+                this.qqUser = null;
                 
                 this.audio = new Audio();
                 this.searchTimer = null;
@@ -1910,6 +2494,8 @@
                 this.loadState();
                 this.renderHomePage();
                 this.renderPlaylists();
+                this.renderQQProfile();
+                this.refreshQQProfileIfNeeded();
                 
                 // 默认音量
                 this.audio.volume = 0.8;
@@ -1941,6 +2527,17 @@
                     
                     // 我的页面
                     historyList: document.getElementById('historyList'),
+                    profileAvatar: document.getElementById('profileAvatar'),
+                    profileName: document.getElementById('profileName'),
+                    profileSubtitle: document.getElementById('profileSubtitle'),
+                    qqInput: document.getElementById('qqInput'),
+                    qqLoginBtn: document.getElementById('qqLoginBtn'),
+                    qqEditNameBtn: document.getElementById('qqEditNameBtn'),
+                    qqLogoutBtn: document.getElementById('qqLogoutBtn'),
+                    qqLoginForm: document.getElementById('qqLoginForm'),
+                    profilePlaylistCount: document.getElementById('profilePlaylistCount'),
+                    profileHistoryCount: document.getElementById('profileHistoryCount'),
+                    profileSourceLabel: document.getElementById('profileSourceLabel'),
                     importInput: document.getElementById('importInput'),
                     importNameInput: document.getElementById('importNameInput'),
                     importBtn: document.getElementById('importBtn'),
@@ -1968,15 +2565,15 @@
                     fullPlayBtn: document.getElementById('fullPlayBtn'),
                     fullPrevBtn: document.getElementById('fullPrevBtn'),
                     fullNextBtn: document.getElementById('fullNextBtn'),
+                    downloadCurrentBtn: document.getElementById('downloadCurrentBtn'),
                     volumeSlider: document.getElementById('volumeSlider'),
                     qualityButtons: document.querySelectorAll('.quality-btn'),
                     
                     // 歌词
-                    lyricsContainer: document.getElementById('lyricsContainer'),
-                    lyricsToggle: document.getElementById('lyricsToggle'),
-                    lyricsCloseBtn: document.getElementById('lyricsCloseBtn'),
-                    lyricsScrollContainer: document.getElementById('lyricsScrollContainer'),
-                    lyricsContent: document.getElementById('lyricsContent'),
+                lyricsContainer: document.getElementById('lyricsContainer'),
+                lyricsCloseBtn: document.getElementById('lyricsCloseBtn'),
+                lyricsScrollContainer: document.getElementById('lyricsScrollContainer'),
+                lyricsContent: document.getElementById('lyricsContent'),
                     
                     // 模态框
                     modalOverlay: document.getElementById('modalOverlay'),
@@ -2021,7 +2618,11 @@
                 this.elements.fullPlayBtn.addEventListener('click', this.togglePlay.bind(this));
                 this.elements.fullPrevBtn.addEventListener('click', this.playPrev.bind(this));
                 this.elements.fullNextBtn.addEventListener('click', this.playNext.bind(this));
-                this.elements.lyricsToggle.addEventListener('click', this.toggleLyrics.bind(this));
+                this.elements.downloadCurrentBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.downloadCurrentSong();
+                });
+                this.elements.fullCover.addEventListener('click', this.toggleLyrics.bind(this));
                 this.elements.lyricsCloseBtn.addEventListener('click', this.hideLyrics.bind(this));
                 
                 // 进度条事件
@@ -2054,6 +2655,14 @@
                 
                 // 导入歌单
                 this.elements.importBtn.addEventListener('click', this.handleImportPlaylist.bind(this));
+                
+                // QQ 登录
+                this.elements.qqLoginBtn.addEventListener('click', this.handleQQLogin.bind(this));
+                this.elements.qqInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleQQLogin();
+                });
+                this.elements.qqEditNameBtn.addEventListener('click', this.editQQNickname.bind(this));
+                this.elements.qqLogoutBtn.addEventListener('click', this.logoutQQ.bind(this));
                 
                 // 模态框
                 this.elements.modalCancel.addEventListener('click', this.hideModal.bind(this));
@@ -2147,7 +2756,9 @@
                             <div class="card-cover">
                                 <img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                      onerror="this.src='${defaultCover}'; this.onerror=null;">
-                                <div class="card-play-icon">▶</div>
+                                <div class="card-play-icon">
+                                    <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+                                </div>
                             </div>
                             <div class="card-info">
                                 <div class="card-title">${this.escapeHtml(song.name)}</div>
@@ -2170,7 +2781,10 @@
                                      onerror="this.src='${defaultCover}'; this.onerror=null;">
                             </div>
                             <div class="song-info">
-                                <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                <div class="song-name-row">
+                                    <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                    ${this.getSourceBadgeHTML(song)}
+                                </div>
                                 <div class="song-artist">${this.escapeHtml(song.artist)}</div>
                             </div>
                             <span class="song-duration">${song.duration}</span>
@@ -2188,7 +2802,7 @@
                 if (Object.keys(this.playlists).length === 0) {
                     html = `
                         <div class="empty-state">
-                            <span class="icon">📂</span>
+                            <span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
                             <p>还没有创建歌单</p>
                         </div>
                     `;
@@ -2196,7 +2810,10 @@
                     for (const [id, playlist] of Object.entries(this.playlists)) {
                         html += `
                             <div class="playlist-card" data-playlist-id="${id}">
-                                <div class="playlist-title">${this.escapeHtml(playlist.name)}</div>
+                                <div class="playlist-title-row">
+                                    <div class="playlist-title">${this.escapeHtml(playlist.name)}</div>
+                                    ${this.getPlaylistSourceBadgeHTML(playlist)}
+                                </div>
                                 <div class="playlist-count">${playlist.songs.length} 首歌曲</div>
                                 <div class="playlist-actions">
                                     <button class="action-btn" onclick="musicPlayer.editPlaylist('${id}')">编辑</button>
@@ -2231,7 +2848,8 @@
                 let html = `
                     <div style="margin-bottom: 20px;">
                         <button class="back-to-list-btn" onclick="musicPlayer.backToPlaylistList()">
-                            ← 返回歌单列表
+                            <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></span>
+                            <span style="margin-left: 6px;">返回歌单列表</span>
                         </button>
                         <h3 style="font-size: 20px; margin-bottom: 5px;">${this.escapeHtml(playlist.name)}</h3>
                         <p style="color: var(--text-tertiary); font-size: 14px;">${playlist.songs.length} 首歌曲</p>
@@ -2244,7 +2862,7 @@
                 if (playlist.songs.length === 0) {
                     html += `
                         <div class="empty-state">
-                            <span class="icon">🎵</span>
+                            <span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>
                             <p>歌单中还没有歌曲</p>
                         </div>
                     `;
@@ -2259,10 +2877,18 @@
                                          onerror="this.style.display='none';">
                                 </div>
                                 <div class="song-info">
-                                    <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                    <div class="song-name-row">
+                                        <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                        ${this.getSourceBadgeHTML(song)}
+                                    </div>
                                     <div class="song-artist">${this.escapeHtml(song.artist)}</div>
                                 </div>
-                                <button class="remove-from-playlist-btn" onclick="event.stopPropagation(); musicPlayer.removeFromPlaylist('${playlistId}', ${index})" title="从歌单移除">✕</button>
+                                <button class="download-song-btn" onclick="event.stopPropagation(); musicPlayer.downloadSongFromList('playlist:${playlistId}', ${index}, this)" title="下载歌曲">
+                                    <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></span>
+                                </button>
+                                <button class="remove-from-playlist-btn" onclick="event.stopPropagation(); musicPlayer.removeFromPlaylist('${playlistId}', ${index})" title="从歌单移除">
+                                    <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                                </button>
                                 <span class="song-duration">${song.duration}</span>
                             </div>
                         `;
@@ -2399,7 +3025,7 @@
                         this.searchResults = results;
                         this.renderSearchResults(results);
                     } else {
-                        this.elements.searchEmpty.innerHTML = '<span class="icon">😔</span><p>未找到相关歌曲</p>';
+                        this.elements.searchEmpty.innerHTML = '<span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span><p>未找到相关歌曲</p>';
                         this.elements.searchEmpty.style.display = 'block';
                     }
                 } catch (error) {
@@ -2410,14 +3036,42 @@
                 }
             }
             
-            // JSONP搜索歌曲 - 使用完整搜索接口获取更多结果
-            searchSongs(keyword) {
+            // 聚合搜索歌曲：同时搜索 QQ 音乐与网易云音乐，合并并去重
+            async searchSongs(keyword) {
+                const tasks = [
+                    this.searchSongsFromQQ(keyword).catch(error => {
+                        console.log('QQ音乐搜索失败:', error.message);
+                        return [];
+                    }),
+                    this.searchSongsFromNetease(keyword).catch(error => {
+                        console.log('网易云音乐搜索失败:', error.message);
+                        return [];
+                    })
+                ];
+                
+                const [qqSongs, neteaseSongs] = await Promise.all(tasks);
+                return this.mergeSearchResults(qqSongs, neteaseSongs);
+            }
+            
+            // JSONP搜索QQ音乐 - 使用完整搜索接口获取更多结果
+            searchSongsFromQQ(keyword) {
                 return new Promise((resolve, reject) => {
-                    const callbackName = 'SearchCallback' + Date.now();
+                    const callbackName = 'SearchCallback' + Date.now() + Math.floor(Math.random() * 1000);
+                    let script;
+                    
+                    const cleanup = () => {
+                        delete window[callbackName];
+                        if (script && script.parentNode) script.remove();
+                    };
+                    
+                    const timeout = setTimeout(() => {
+                        cleanup();
+                        resolve([]);
+                    }, 10000);
                     
                     window[callbackName] = (data) => {
-                        delete window[callbackName];
-                        document.head.removeChild(script);
+                        clearTimeout(timeout);
+                        cleanup();
                         
                         try {
                             if (data && data.data && data.data.song && data.data.song.list) {
@@ -2429,13 +3083,14 @@
                                     
                                     return {
                                         id: song.songmid || song.mid,
-                                        name: song.songname || song.name,
+                                        name: song.songname || song.name || '未知歌曲',
                                         artist: singers,
                                         duration: song.interval ? this.formatTime(song.interval) : '未知',
                                         album: song.albumname || '未知专辑',
                                         songmid: song.songmid || song.mid,
                                         albummid: albumMid,
-                                        coverUrl: coverUrl
+                                        coverUrl: coverUrl,
+                                        source: 'qq'
                                     };
                                 });
                                 resolve(processedSongs);
@@ -2447,17 +3102,64 @@
                         }
                     };
                     
-                    const script = document.createElement('script');
+                    script = document.createElement('script');
                     script.src = `https://c.y.qq.com/soso/fcgi-bin/search_cp?w=${encodeURIComponent(keyword)}&p=1&n=20&cr=1&catZhida=1&format=jsonp&new_json=1&lossless=0&aggr=1&remoteplace=txt.yqq.song&g_tk=5381&jsonpCallback=${callbackName}&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0`;
                     
                     script.onerror = () => {
-                        delete window[callbackName];
-                        document.head.removeChild(script);
-                        reject(new Error('JSONP请求失败'));
+                        clearTimeout(timeout);
+                        cleanup();
+                        resolve([]);
                     };
                     
                     document.head.appendChild(script);
                 });
+            }
+            
+            // 搜索网易云音乐：使用支持 CORS 的第三方网易云 API，前端可免代理直连
+            async searchSongsFromNetease(keyword) {
+                const resp = await fetch(`https://apis.netstart.cn/music/cloudsearch?keywords=${encodeURIComponent(keyword)}&limit=20`, {
+                    signal: AbortSignal.timeout(12000)
+                });
+                
+                if (!resp.ok) return [];
+                const data = await resp.json();
+                const songs = data && data.result && Array.isArray(data.result.songs) ? data.result.songs : [];
+                
+                return songs.map(song => {
+                    // netstart/cloudsearch 返回的新接口字段一般是 ar/al/dt；部分兼容接口可能是 artists/album/duration
+                    const artistList = Array.isArray(song.ar) ? song.ar : (Array.isArray(song.artists) ? song.artists : []);
+                    const artists = artistList.length > 0 ? artistList.map(a => a.name).join(' / ') : '未知歌手';
+                    const album = song.al || song.album || {};
+                    const durationMs = song.dt || song.duration || 0;
+                    
+                    return {
+                        id: String(song.id),
+                        name: song.name || '未知歌曲',
+                        artist: artists,
+                        duration: durationMs ? this.formatTime(Math.round(durationMs / 1000)) : '未知',
+                        album: album.name || '未知专辑',
+                        songmid: String(song.id),
+                        albummid: album.id ? String(album.id) : '',
+                        coverUrl: album.picUrl || null,
+                        source: 'netease'
+                    };
+                });
+            }
+            
+            // 合并搜索结果：优先保留不同平台的结果，只去掉同平台完全重复项
+            mergeSearchResults(...songGroups) {
+                const merged = [];
+                const seen = new Set();
+                
+                songGroups.flat().forEach(song => {
+                    if (!song || !song.name) return;
+                    const key = `${song.source || 'unknown'}:${song.songmid || song.id || `${song.name}-${song.artist}`}`;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    merged.push(song);
+                });
+                
+                return merged;
             }
             
             // 渲染搜索结果
@@ -2472,14 +3174,22 @@
                                 ${song.coverUrl ? 
                                     `<img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                          onerror="this.style.display='none';">` :
-                                    `<span>🎵</span>`
+                                    `<span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>`
                                 }
                             </div>
                             <div class="song-info">
-                                <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                <div class="song-name-row">
+                                    <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                    ${this.getSourceBadgeHTML(song)}
+                                </div>
                                 <div class="song-artist">${this.escapeHtml(song.artist)}</div>
                             </div>
-                            <button class="add-to-playlist-btn" data-song-index="${index}" title="添加到歌单">+</button>
+                            <button class="add-to-playlist-btn" data-song-index="${index}" title="添加到歌单">
+                                <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                            </button>
+                            <button class="download-song-btn" data-song-index="${index}" title="下载歌曲">
+                                <span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></span>
+                            </button>
                             <span class="song-duration">${song.duration}</span>
                         </div>
                     `;
@@ -2494,6 +3204,16 @@
                         const songIndex = parseInt(btn.dataset.songIndex);
                         const song = songs[songIndex];
                         if (song) this.showAddToPlaylistMenu(song);
+                    });
+                });
+                
+                // 绑定下载按钮事件
+                this.elements.searchResults.querySelectorAll('.download-song-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const songIndex = parseInt(btn.dataset.songIndex);
+                        const song = songs[songIndex];
+                        if (song) this.downloadSong(song, btn);
                     });
                 });
             }
@@ -2577,6 +3297,7 @@
                 if (!song) return;
                 
                 this.currentSongIndex = index;
+                this.currentSong = {...song};
                 
                 // 更新UI
                 this.updatePlayerUI(song);
@@ -2589,14 +3310,14 @@
                 
                 // 获取歌曲URL
                 try {
-                    const songUrl = await this.getSongUrl(song.songmid);
+                    const songUrl = await this.getSongUrl(song);
                     
                     if (songUrl) {
                         this.audio.src = songUrl;
                         this.highlightCurrentSong();
                         
-                        // 加载歌词 - 传入songmid用于API获取
-                        this.loadLyrics(song.name, song.songmid);
+                        // 加载歌词 - 传入完整歌曲对象，便于按来源选择歌词API
+                        this.loadLyrics(song);
                         
                         try {
                             await this.audio.play();
@@ -2610,6 +3331,130 @@
                     console.error('获取歌曲URL失败:', error);
                     this.showError('播放失败，请尝试其他歌曲');
                 }
+            }
+            
+            // 下载当前歌曲
+            downloadCurrentSong() {
+                if (!this.currentSong) {
+                    this.showError('当前没有可下载的歌曲');
+                    return;
+                }
+                this.downloadSong(this.currentSong, this.elements.downloadCurrentBtn);
+            }
+            
+            // 从列表下载歌曲
+            downloadSongFromList(source, index, triggerBtn = null) {
+                const song = this.getSongBySourceAndIndex(source, index);
+                if (!song) {
+                    this.showError('未找到要下载的歌曲');
+                    return;
+                }
+                this.downloadSong(song, triggerBtn);
+            }
+            
+            // 根据列表来源和索引取歌曲
+            getSongBySourceAndIndex(source, index) {
+                if (source === 'home') return presetSongs[index] || null;
+                if (source === 'search') return this.searchResults[index] || null;
+                if (source && source.startsWith('playlist:')) {
+                    const playlistId = source.split(':')[1];
+                    const playlist = this.playlists[playlistId];
+                    return playlist && playlist.songs ? (playlist.songs[index] || null) : null;
+                }
+                return null;
+            }
+            
+            // 下载歌曲：只下载现有播放链路能合法获取到的音频URL，不绕过版权限制
+            async downloadSong(song, triggerBtn = null) {
+                if (!song) return;
+                
+                const originalHtml = triggerBtn ? triggerBtn.innerHTML : '';
+                if (triggerBtn) {
+                    triggerBtn.disabled = true;
+                    triggerBtn.innerHTML = '<span class="icon-svg icon-sm"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg></span>';
+                }
+                
+                try {
+                    this.showSuccess(`正在准备下载 "${song.name}"...`);
+                    const songUrl = await this.getSongUrl(song);
+                    
+                    if (!songUrl) {
+                        this.showError('无法下载：歌曲可能受付费或版权限制');
+                        return;
+                    }
+                    
+                    const filename = this.buildDownloadFilename(song, songUrl);
+                    await this.triggerBrowserDownload(songUrl, filename);
+                    this.showSuccess(`已开始下载 "${song.name}"`);
+                } catch (error) {
+                    console.error('下载失败:', error);
+                    this.showError('下载失败，可能是浏览器或跨域限制');
+                } finally {
+                    if (triggerBtn) {
+                        triggerBtn.disabled = false;
+                        triggerBtn.innerHTML = originalHtml;
+                    }
+                }
+            }
+            
+            // 触发浏览器下载，优先转 Blob 以提升跨域音频下载兼容性
+            async triggerBrowserDownload(url, filename) {
+                let downloadUrl = url;
+                let revokeAfterDownload = false;
+                
+                try {
+                    if (!url.startsWith('blob:')) {
+                        const resp = await fetch(url, { signal: AbortSignal.timeout(30000) });
+                        if (resp.ok) {
+                            const blob = await resp.blob();
+                            if (blob.size > 10000) {
+                                downloadUrl = URL.createObjectURL(blob);
+                                revokeAfterDownload = true;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('转Blob下载失败，尝试直接下载URL:', error.message);
+                }
+                
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filename;
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                
+                if (revokeAfterDownload) {
+                    setTimeout(() => URL.revokeObjectURL(downloadUrl), 30000);
+                }
+            }
+            
+            // 生成安全下载文件名
+            buildDownloadFilename(song, url = '') {
+                const ext = this.getAudioExtension(url, song.source);
+                const artist = song.artist || '未知歌手';
+                const name = song.name || '未知歌曲';
+                return `${this.sanitizeFilename(artist)} - ${this.sanitizeFilename(name)}.${ext}`;
+            }
+            
+            getAudioExtension(url = '', source = 'qq') {
+                const cleanUrl = (url || '').split('?')[0].toLowerCase();
+                const match = cleanUrl.match(/\.([a-z0-9]{2,5})$/);
+                if (match && ['mp3', 'm4a', 'flac', 'ogg', 'wav', 'aac'].includes(match[1])) return match[1];
+                if (this.currentQuality === 'flac') return 'flac';
+                if (this.currentQuality === 'm4a') return 'm4a';
+                return source === 'qq' && this.currentQuality === 'm4a' ? 'm4a' : 'mp3';
+            }
+            
+            sanitizeFilename(text) {
+                return String(text || '')
+                    .replace(/[\\/:*?"|]/g, '_')
+                    .replaceAll(String.fromCharCode(60), '_')
+                    .replaceAll(String.fromCharCode(62), '_')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .slice(0, 80) || 'music';
             }
             
             // 添加到播放历史
@@ -2629,15 +3474,278 @@
                 this.saveState();
             }
             
+            // QQ号登录：拉取公开头像与昵称
+            async handleQQLogin() {
+                const qq = (this.elements.qqInput.value || '').trim();
+                if (!/^\d{5,12}$/.test(qq)) {
+                    this.showError('请输入正确的 QQ 号');
+                    return;
+                }
+                
+                const originalText = this.elements.qqLoginBtn.textContent;
+                this.elements.qqLoginBtn.disabled = true;
+                this.elements.qqLoginBtn.textContent = '登录中';
+                
+                try {
+                    const profile = await this.fetchQQProfile(qq);
+                    this.qqUser = profile;
+                    this.saveState();
+                    this.renderQQProfile();
+                    this.showSuccess(`欢迎回来，${profile.nickname}`);
+                } catch (error) {
+                    console.warn('QQ资料获取失败:', error);
+                    this.showError('QQ资料获取失败，请检查网络或QQ号');
+                } finally {
+                    this.elements.qqLoginBtn.disabled = false;
+                    this.elements.qqLoginBtn.textContent = originalText;
+                }
+            }
+            
+            // 使用 QQ 官方公开头像接口 + QQ空间公开资料获取昵称
+            async fetchQQProfile(qq) {
+                const avatarUrl = `https://q1.qlogo.cn/g?b=qq&nk=${encodeURIComponent(qq)}&s=640`;
+                let nickname = await this.fetchQQNicknameTextDecoded(qq);
+                if (!nickname) nickname = await this.fetchQQNicknameByJSONP(qq);
+                nickname = this.normalizeQQNickname(nickname);
+                if (!nickname) nickname = `QQ ${qq}`;
+                
+                return {
+                    qq,
+                    nickname,
+                    avatarUrl,
+                    loginTime: Date.now(),
+                    nicknameSynced: !!nickname && nickname !== `QQ ${qq}`
+                };
+            }
+            
+            // 优先用 ArrayBuffer + GB18030 手动解码，解决 QQ 老接口中文乱码
+            async fetchQQNicknameTextDecoded(qq) {
+                const urls = [
+                    `http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`,
+                    `https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`,
+                    `https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`
+                ];
+                
+                for (const url of urls) {
+                    try {
+                        const resp = await fetch(url, {
+                            signal: AbortSignal.timeout(8000),
+                            cache: 'no-store'
+                        });
+                        if (!resp.ok) continue;
+                        const buffer = await resp.arrayBuffer();
+                        const text = this.decodeQQPortraitBuffer(buffer);
+                        const nickname = this.extractQQNicknameFromText(text, qq);
+                        if (nickname) return nickname;
+                    } catch (error) {
+                        console.log('QQ昵称二进制解码接口失败:', url, error.message);
+                    }
+                }
+                return '';
+            }
+            
+            decodeQQPortraitBuffer(buffer) {
+                const encodings = ['gb18030', 'gbk', 'gb2312', 'utf-8'];
+                let fallbackText = '';
+                for (const encoding of encodings) {
+                    try {
+                        const text = new TextDecoder(encoding).decode(buffer);
+                        if (!fallbackText) fallbackText = text;
+                        if (text && !this.isMojibakeText(text)) return text;
+                    } catch (e) {}
+                }
+                return fallbackText;
+            }
+            
+            extractQQNicknameFromText(text, qq) {
+                if (!text) return '';
+                const match = text.match(/portraitCallBack\((.*)\)/s);
+                if (!match || !match[1]) return '';
+                try {
+                    const data = JSON.parse(match[1]);
+                    const item = data && data[qq];
+                    const candidates = Array.isArray(item)
+                        ? [item[6], item[5], item[4], item[3], item[item.length - 1]]
+                        : [];
+                    const name = candidates.find(v => typeof v === 'string' && v.trim() && !/^\d+$/.test(v.trim()));
+                    return name ? this.normalizeQQNickname(name) : '';
+                } catch (error) {
+                    console.log('解析QQ资料文本失败:', error.message, text.slice(0, 80));
+                    return '';
+                }
+            }
+            
+            // QQ空间资料接口通常不支持 fetch CORS，用 script JSONP 避免昵称拿不到
+            async fetchQQNicknameByJSONP(qq) {
+                const urls = [
+                    // 用户反馈：浏览器直接访问该老接口可正常返回昵称，优先使用；charset=gbk 用于修复中文乱码
+                    { url: `http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`, charset: 'gb2312' },
+                    // 备用域名
+                    { url: `https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`, charset: 'gb2312' }
+                ];
+                
+                // HTTPS 页面加载 HTTP JSONP 可能被浏览器 Mixed Content 拦截，自动追加 HTTPS 变体兜底
+                if (location.protocol === 'https:') {
+                    urls.push({ url: `https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${encodeURIComponent(qq)}&_=${Date.now()}`, charset: 'gb2312' });
+                }
+                
+                for (const item of urls) {
+                    const nickname = await this.loadQQPortraitJSONP(item.url, qq, item.charset);
+                    if (nickname) return nickname;
+                }
+                return '';
+            }
+            
+            loadQQPortraitJSONP(url, qq, charset = 'gbk') {
+                return new Promise((resolve) => {
+                    const callbackName = 'portraitCallBack';
+                    const previousCallback = window[callbackName];
+                    let script;
+                    let settled = false;
+                    
+                    const restore = () => {
+                        if (script && script.parentNode) script.remove();
+                        if (previousCallback) {
+                            window[callbackName] = previousCallback;
+                        } else {
+                            try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+                        }
+                    };
+                    
+                    const finish = (name = '') => {
+                        if (settled) return;
+                        settled = true;
+                        clearTimeout(timeout);
+                        restore();
+                        resolve(name);
+                    };
+                    
+                    const timeout = setTimeout(() => finish(''), 8000);
+                    
+                    window[callbackName] = (data) => {
+                        try {
+                            const item = data && data[qq];
+                            const candidates = Array.isArray(item)
+                                ? [item[6], item[5], item[4], item[3], item[item.length - 1]]
+                                : [];
+                            const name = candidates.find(v => typeof v === 'string' && v.trim() && !/^\d+$/.test(v.trim()));
+                            finish(name ? this.normalizeQQNickname(name) : '');
+                        } catch (error) {
+                            console.log('解析QQ昵称失败:', error.message);
+                            finish('');
+                        }
+                    };
+                    
+                    script = document.createElement('script');
+                    script.charset = charset;
+                    script.setAttribute('charset', charset);
+                    script.src = url;
+                    script.onerror = () => finish('');
+                    document.head.appendChild(script);
+                });
+            }
+            
+            normalizeQQNickname(name) {
+                return String(name || '')
+                    .replace(/[\u0000-\u001f\u007f]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            
+            isMojibakeText(text) {
+                return /�|锟|�|Ã|Â/.test(String(text || ''));
+            }
+            
+            async refreshQQProfileIfNeeded() {
+                if (!this.qqUser || !this.qqUser.qq) return;
+                const shouldRefresh = this.isMojibakeText(this.qqUser.nickname) || !this.qqUser.nicknameSynced;
+                if (!shouldRefresh) return;
+                
+                try {
+                    if (this.qqUser.nicknameManual) return;
+                    const profile = await this.fetchQQProfile(this.qqUser.qq);
+                    if (profile && profile.nicknameSynced) {
+                        this.qqUser = profile;
+                        this.saveState();
+                        this.renderQQProfile();
+                    }
+                } catch (error) {
+                    console.log('刷新QQ昵称失败:', error.message);
+                }
+            }
+            
+            editQQNickname() {
+                if (!this.qqUser) return;
+                this.showModal('修改显示昵称', this.qqUser.nickname || '请输入昵称', (name) => {
+                    const nickname = this.normalizeQQNickname(name);
+                    if (!nickname) {
+                        this.showError('昵称不能为空');
+                        return;
+                    }
+                    this.qqUser.nickname = nickname;
+                    this.qqUser.nicknameSynced = true;
+                    this.qqUser.nicknameManual = true;
+                    this.saveState();
+                    this.renderQQProfile();
+                    this.hideModal();
+                    this.showSuccess('昵称已保存');
+                });
+            }
+            
+            // 退出 QQ 登录
+            logoutQQ() {
+                this.qqUser = null;
+                this.elements.qqInput.value = '';
+                this.saveState();
+                this.renderQQProfile();
+                this.showSuccess('已退出登录');
+            }
+            
+            // 渲染 QQ 用户资料卡
+            renderQQProfile() {
+                if (!this.elements.profileName) return;
+                const playlistCount = Object.keys(this.playlists || {}).length;
+                const historyCount = (this.playHistory || []).length;
+                this.elements.profilePlaylistCount.textContent = playlistCount;
+                this.elements.profileHistoryCount.textContent = historyCount;
+                
+                if (this.qqUser) {
+                    const card = document.getElementById('profileLoginCard');
+                    if (card) card.classList.add('logged-in');
+                    this.elements.profileAvatar.innerHTML = `<img src="${this.qqUser.avatarUrl}" alt="${this.escapeHtml(this.qqUser.nickname)}" onerror="this.style.display='none';">`;
+                    this.elements.profileName.textContent = this.qqUser.nickname || `QQ ${this.qqUser.qq}`;
+                    this.elements.profileSubtitle.textContent = this.qqUser.nicknameManual
+                        ? `QQ ${this.qqUser.qq} · 使用自定义昵称`
+                        : (this.qqUser.nicknameSynced
+                            ? `QQ ${this.qqUser.qq} · 昵称与头像已同步`
+                            : `QQ ${this.qqUser.qq} · 昵称接口异常，可点“改名”修正`);
+                    this.elements.qqLoginForm.style.display = 'none';
+                    this.elements.qqEditNameBtn.style.display = 'block';
+                    this.elements.qqLogoutBtn.style.display = 'block';
+                    this.elements.profileSourceLabel.textContent = 'QQ';
+                } else {
+                    const card = document.getElementById('profileLoginCard');
+                    if (card) card.classList.remove('logged-in');
+                    this.elements.profileAvatar.innerHTML = '<span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>';
+                    this.elements.profileName.textContent = '未登录';
+                    this.elements.profileSubtitle.textContent = '输入 QQ 号同步头像和昵称';
+                    this.elements.qqLoginForm.style.display = 'flex';
+                    this.elements.qqEditNameBtn.style.display = 'none';
+                    this.elements.qqLogoutBtn.style.display = 'none';
+                    this.elements.profileSourceLabel.textContent = 'QQ';
+                }
+            }
+            
             // 渲染播放历史
             renderHistory() {
                 if (this.playHistory.length === 0) {
                     this.elements.historyList.innerHTML = `
-                        <div class="empty-state">
-                            <span class="icon">📚</span>
-                            <p>暂无播放历史</p>
-                        </div>
-                    `;
+                    <div class="empty-state">
+                        <span class="icon icon-svg icon-xl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
+                        <p>暂无播放历史</p>
+                    </div>
+                `;
+                    this.renderQQProfile();
                     return;
                 }
                 
@@ -2650,11 +3758,14 @@
                                 ${song.coverUrl ? 
                                     `<img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                          onerror="this.style.display='none';">` :
-                                    `<span>🎵</span>`
+                                    `<span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>`
                                 }
                             </div>
                             <div class="song-info">
-                                <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                <div class="song-name-row">
+                                    <div class="song-name">${this.escapeHtml(song.name)}</div>
+                                    ${this.getSourceBadgeHTML(song)}
+                                </div>
                                 <div class="song-artist">${this.escapeHtml(song.artist)}</div>
                             </div>
                             <span class="song-duration">${song.duration}</span>
@@ -2663,10 +3774,34 @@
                 });
                 
                 this.elements.historyList.innerHTML = html;
+                this.renderQQProfile();
+            }
+            
+            refreshProfileStats() {
+                this.renderQQProfile();
             }
             
             // 获取歌曲播放URL - 尝试多种格式
-            async getSongUrl(songmid) {
+            async getSongUrl(song) {
+                const songmid = song.songmid || '';
+                const source = song.source || 'qq';
+                
+                // 1. 首先尝试QQ音乐官方API（仅对QQ音乐歌曲）
+                if (source === 'qq' || !source) {
+                    const qqUrl = await this._getSongUrlFromQQ(songmid);
+                    if (qqUrl) return qqUrl;
+                }
+                
+                // 2. 如果QQ官方API失败或不是QQ音乐，尝试Meting API
+                const metingUrl = await this._getSongUrlFromMeting(songmid, source);
+                if (metingUrl) return metingUrl;
+                
+                console.log(`所有格式都失败，歌曲: ${songmid}, 来源: ${source}`);
+                return null;
+            }
+            
+            // 从QQ音乐官方API获取播放URL
+            async _getSongUrlFromQQ(songmid) {
                 // 根据用户选择的音质确定格式顺序
                 const qualityMap = {
                     'm4a':  { prefix: 'C400', ext: '.m4a', name: '标准M4A' },
@@ -2710,8 +3845,34 @@
                     }
                 }
                 
-                // 所有格式都失败
-                console.log(`所有格式都失败，歌曲: ${songmid}`);
+                return null;
+            }
+            
+            // 从Meting API获取播放URL（用于付费歌曲或免费歌曲）
+            async _getSongUrlFromMeting(songmid, source = 'qq') {
+                try {
+                    console.log(`尝试Meting API获取播放URL: ${songmid}, 来源: ${source}`);
+                    const server = source === 'netease' ? 'netease' : 'tencent';
+                    const resp = await fetch(`https://api.injahow.cn/meting/?server=${server}&type=url&id=${songmid}`, { 
+                        signal: AbortSignal.timeout(10000) 
+                    });
+                    
+                    if (resp.ok) {
+                        const contentType = resp.headers.get('content-type') || '';
+                        // 检查是否返回音频流
+                        if (contentType.includes('audio/') || contentType.includes('application/octet-stream')) {
+                            const blob = await resp.blob();
+                            if (blob.size > 10000) { // 至少10KB，避免空音频
+                                const url = URL.createObjectURL(blob);
+                                console.log(`Meting API成功获取播放URL: ${songmid}, 大小: ${blob.size}字节`);
+                                return url;
+                            }
+                        }
+                        console.log(`Meting API返回无效内容: ${contentType}`);
+                    }
+                } catch (e) {
+                    console.log(`Meting API获取播放URL失败: ${e.message}`);
+                }
                 return null;
             }
             
@@ -2834,8 +3995,15 @@
                 });
             }
             
-            // 加载歌词 - 先尝试API，再回退模拟数据
-            async loadLyrics(songName, songmid) {
+            // 加载歌词 - 按歌曲来源选择对应API，再回退模拟数据
+            async loadLyrics(songOrName, legacySongmid) {
+                const song = typeof songOrName === 'object' && songOrName !== null
+                    ? songOrName
+                    : { name: songOrName, songmid: legacySongmid, source: 'qq' };
+                const songName = song.name || '';
+                const songmid = song.songmid || song.id || '';
+                const source = song.source || 'qq';
+                
                 this.currentLyricIndex = -1;
                 this.currentLyrics = [];
                 
@@ -2846,8 +4014,22 @@
                     </div>
                 `;
                 
-                // 先尝试从API获取真实歌词
-                if (songmid) {
+                // 网易云音乐：直接使用支持 CORS 的 netstart 歌词接口
+                if (source === 'netease' && songmid) {
+                    try {
+                        const neteaseLyrics = await this.fetchLyricsFromNetease(songmid);
+                        if (neteaseLyrics && neteaseLyrics.length > 0) {
+                            this.currentLyrics = neteaseLyrics;
+                            this.renderLyrics(neteaseLyrics);
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('网易云歌词获取失败，尝试Meting API:', e.message);
+                    }
+                }
+                
+                // QQ音乐：先尝试QQ音乐API获取真实歌词
+                if (source !== 'netease' && songmid) {
                     try {
                         const apiLyrics = await this.fetchLyricsFromAPI(songmid);
                         if (apiLyrics && apiLyrics.length > 0) {
@@ -2856,7 +4038,21 @@
                             return;
                         }
                     } catch (e) {
-                        console.log('API歌词获取失败，尝试模拟数据:', e.message);
+                        console.log('QQ音乐API歌词获取失败，尝试Meting API:', e.message);
+                    }
+                }
+                
+                // 如果专用API失败，尝试从Meting API获取歌词
+                if (songmid) {
+                    try {
+                        const metingLyrics = await this.fetchLyricsFromMeting(songmid, source);
+                        if (metingLyrics && metingLyrics.length > 0) {
+                            this.currentLyrics = metingLyrics;
+                            this.renderLyrics(metingLyrics);
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('Meting API歌词获取失败，尝试模拟数据:', e.message);
                     }
                 }
                 
@@ -2869,7 +4065,7 @@
                 } else {
                     this.elements.lyricsContent.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: var(--text-tertiary);">
-                            <span style="font-size: 48px; display: block; margin-bottom: 15px;">📝</span>
+                            <span class="icon-svg icon-xl" style="margin-bottom: 15px;"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></span>
                             <p>暂无歌词</p>
                         </div>
                     `;
@@ -2938,6 +4134,53 @@
                 });
             }
             
+            // 从网易云音乐API获取歌词（免代理，支持CORS）
+            async fetchLyricsFromNetease(songmid) {
+                try {
+                    console.log(`尝试网易云API获取歌词: ${songmid}`);
+                    const resp = await fetch(`https://apis.netstart.cn/music/lyric?id=${encodeURIComponent(songmid)}`, {
+                        signal: AbortSignal.timeout(10000)
+                    });
+                    
+                    if (!resp.ok) return [];
+                    const data = await resp.json();
+                    const lyricText = data && data.lrc && data.lrc.lyric ? data.lrc.lyric : '';
+                    
+                    if (lyricText && lyricText.length > 10) {
+                        console.log(`网易云API获取歌词成功: ${songmid}`);
+                        return this.parseLRC(lyricText);
+                    }
+                } catch (e) {
+                    console.log(`网易云API获取歌词失败: ${e.message}`);
+                }
+                return [];
+            }
+            
+            // 从Meting API获取歌词
+            async fetchLyricsFromMeting(songmid, source = 'qq') {
+                try {
+                    console.log(`尝试Meting API获取歌词: ${songmid}, 来源: ${source}`);
+                    const servers = source === 'netease' ? ['netease', 'tencent'] : ['tencent', 'netease'];
+                    
+                    for (const server of servers) {
+                        const resp = await fetch(`https://api.injahow.cn/meting/?server=${server}&type=lrc&id=${songmid}`, { 
+                            signal: AbortSignal.timeout(10000) 
+                        });
+                        
+                        if (resp.ok) {
+                            const lrcText = await resp.text();
+                            if (lrcText && lrcText.length > 10 && !lrcText.includes('"error"')) {
+                                console.log(`Meting API获取歌词成功(${server}): ${songmid}`);
+                                return this.parseLRC(lrcText);
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log(`Meting API获取歌词失败: ${e.message}`);
+                }
+                return [];
+            }
+            
             // 解析LRC格式歌词
             parseLRC(lrcText) {
                 const lines = lrcText.split('\n');
@@ -2995,14 +4238,12 @@
             toggleLyrics() {
                 this.lyricsVisible = !this.lyricsVisible;
                 this.elements.lyricsContainer.classList.toggle('active', this.lyricsVisible);
-                this.elements.lyricsToggle.textContent = this.lyricsVisible ? '封面' : '词';
             }
             
             // 隐藏歌词
             hideLyrics() {
                 this.lyricsVisible = false;
                 this.elements.lyricsContainer.classList.remove('active');
-                this.elements.lyricsToggle.textContent = '词';
             }
             
             // 更新当前歌词
@@ -3052,61 +4293,86 @@
             }
             
             // 处理导入歌单
+// 导入歌单按钮点击
             async handleImportPlaylist() {
                 const input = this.elements.importInput.value.trim();
                 if (!input) {
-                    this.showError('请输入歌单链接或ID');
-                    return;
-                }
-                
-                // 解析歌单ID
-                let disstid = null;
-                const idMatch = input.match(/[?&]id=(\d+)/);
-                const disstidMatch = input.match(/[?&]disstid=(\d+)/);
-                
-                if (idMatch) {
-                    disstid = idMatch[1];
-                } else if (disstidMatch) {
-                    disstid = disstidMatch[1];
-                } else {
-                    const pathMatch = input.match(/playsquare\/(\d+)/);
-                    if (pathMatch) {
-                        disstid = pathMatch[1];
-                    } else {
-                        const numMatch = input.match(/\b(\d{7,})\b/);
-                        if (numMatch) {
-                            disstid = numMatch[1];
-                        }
-                    }
-                }
-                
-                if (!disstid) {
-                    this.showError('无法识别歌单ID，请输入QQ音乐歌单链接或数字ID');
+                    this.showError('请输入QQ音乐或网易云音乐歌单链接或ID');
                     return;
                 }
                 
                 // 读取用户输入的歌单名，未填则自动生成
                 const userPlaylistName = this.elements.importNameInput.value.trim();
                 
-                this.showSuccess('正在导入歌单...');
+                // 判断是网易云还是QQ音乐
+                const isNetease = /music\.163\.com|y\.music\.163\.com/i.test(input);
+                
+                // 解析歌单ID
+                let playlistId = null;
+                let sourceName = 'QQ音乐';
+                
+                if (isNetease) {
+                    // 网易云音乐歌单ID解析
+                    const idMatch = input.match(/[?&]id=(\d+)/);
+                    if (idMatch) {
+                        playlistId = idMatch[1];
+                    } else {
+                        // 尝试从路径中提取
+                        const pathMatch = input.match(/playlist\/(\d+)/);
+                        if (pathMatch) {
+                            playlistId = pathMatch[1];
+                        }
+                    }
+                    sourceName = '网易云音乐';
+                } else {
+                    // QQ音乐歌单ID解析
+                    const idMatch = input.match(/[?&]id=(\d+)/);
+                    const disstidMatch = input.match(/[?&]disstid=(\d+)/);
+                    
+                    if (idMatch) {
+                        playlistId = idMatch[1];
+                    } else if (disstidMatch) {
+                        playlistId = disstidMatch[1];
+                    } else {
+                        const pathMatch = input.match(/playsquare\/(\d+)/);
+                        if (pathMatch) {
+                            playlistId = pathMatch[1];
+                        } else {
+                            const numMatch = input.match(/\b(\d{7,})\b/);
+                            if (numMatch) {
+                                playlistId = numMatch[1];
+                            }
+                        }
+                    }
+                }
+                
+                if (!playlistId) {
+                    this.showError(`无法识别歌单ID，请输入${isNetease ? '网易云音乐' : 'QQ音乐'}歌单链接或数字ID`);
+                    return;
+                }
+                
+                this.showSuccess(`正在从${sourceName}导入歌单...`);
                 
                 try {
-                    const result = await this.fetchPlaylistFromQQ(disstid);
+                    const result = isNetease 
+                        ? await this.fetchPlaylistFromNetease(playlistId)
+                        : await this.fetchPlaylistFromQQ(playlistId);
                     
                     if (result && result.songs && result.songs.length > 0) {
                         // 确定歌单名：用户输入 > 接口返回 > 首首歌名 + 等
                         let playlistName = userPlaylistName || result.name;
                         if (!playlistName || playlistName === '导入的歌单') {
                             const firstArtist = result.songs[0].artist;
-                            playlistName = firstArtist ? `${firstArtist} 的歌单` : `歌单 ${disstid}`;
+                            playlistName = firstArtist ? `${firstArtist} 的歌单` : `${sourceName}歌单 ${playlistId}`;
                         }
                         
-                        const playlistId = 'imported_' + Date.now();
-                        this.playlists[playlistId] = {
+                        const newPlaylistId = 'imported_' + Date.now();
+                        this.playlists[newPlaylistId] = {
                             name: playlistName,
                             songs: result.songs,
                             created: Date.now(),
-                            imported: true
+                            imported: true,
+                            source: isNetease ? 'netease' : 'qq'
                         };
                         
                         this.renderPlaylists();
@@ -3122,7 +4388,6 @@
                     this.showError('导入失败: ' + e.message);
                 }
             }
-            
             // 获取或设置代理地址
             getProxyUrl() {
                 return localStorage.getItem('music_proxy_url') || '';
@@ -3131,6 +4396,39 @@
             setProxyUrl(url) {
                 localStorage.setItem('music_proxy_url', url.replace(/\/+$/, ''));
                 this.showSuccess('代理地址已保存');
+            }
+            
+            // 获取网易云音乐歌单
+            async fetchPlaylistFromNetease(playlistId) {
+                // 策略1: Meting API（无需代理，支持CORS，任何域名可用）
+                try {
+                    const resp = await fetch(`https://api.injahow.cn/meting/?server=netease&type=playlist&id=${playlistId}`, { signal: AbortSignal.timeout(15000) });
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        if (Array.isArray(data) && data.length > 0) {
+                            const songs = data.map(item => {
+                                const urlMatch = item.url ? item.url.match(/id=([^&]+)/) : null;
+                                const picMatch = item.pic ? item.pic.match(/id=([^&]+)/) : null;
+                                const songmid = urlMatch ? urlMatch[1] : '';
+                                const albummid = picMatch ? picMatch[1] : '';
+                                
+                                return {
+                                    name: item.name || '未知歌曲',
+                                    artist: item.artist || '未知歌手',
+                                    album: '',
+                                    songmid: songmid,
+                                    albummid: albummid,
+                                    coverUrl: item.pic || null, // 网易云直接提供完整图片URL
+                                    duration: '',
+                                    source: 'netease'
+                                };
+                            });
+                            return { name: '导入的歌单', songs };
+                        }
+                    }
+                } catch(e) { console.log('网易云Meting API失败:', e.message); }
+                
+                return null;
             }
             
             // 通过多种方式获取QQ音乐歌单
@@ -3154,7 +4452,8 @@
                                     songmid: songmid,
                                     albummid: albummid,
                                     coverUrl: albummid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}.jpg` : null,
-                                    duration: ''
+                                    duration: '',
+                                    source: 'qq'
                                 };
                             });
                             return { name: '导入的歌单', songs };
@@ -3329,24 +4628,26 @@
             updateCoverImage(coverUrl) {
                 // 更新迷你播放器封面
                 if (coverUrl) {
-                    this.elements.miniCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
-                } else {
-                    this.elements.miniCover.innerHTML = '<span>🎵</span>';
-                }
-                
-                // 更新全屏播放器封面
-                if (coverUrl) {
-                    this.elements.fullCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
-                } else {
-                    this.elements.fullCover.innerHTML = '<span>🎵</span>';
-                }
+                this.elements.miniCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
+            } else {
+                this.elements.miniCover.innerHTML = '<span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>';
+            }
+            
+            // 更新全屏播放器封面
+            if (coverUrl) {
+                this.elements.fullCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
+            } else {
+                this.elements.fullCover.innerHTML = '<span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>';
+            }
             }
             
             // 更新播放按钮状态
             updatePlayButton() {
-                const icon = this.isPlaying ? '⏸' : '▶';
-                this.elements.playBtn.textContent = icon;
-                this.elements.fullPlayBtn.textContent = icon;
+                const playSvg = '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+                const pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+                const icon = this.isPlaying ? pauseSvg : playSvg;
+                this.elements.playBtn.innerHTML = `<span class="icon-svg icon-lg btn-icon-play">${icon}</span>`;
+                this.elements.fullPlayBtn.innerHTML = `<span class="icon-svg icon-xl btn-icon-play">${icon}</span>`;
             }
             
             // 高亮当前播放歌曲
@@ -3502,12 +4803,13 @@
             saveState() {
                 try {
                     const state = {
-                        currentSongIndex: this.currentSongIndex,
-                        currentPlaylist: this.currentPlaylist,
+                    currentSongIndex: this.currentSongIndex,
+                    currentPlaylist: this.currentPlaylist,
                         volume: this.audio.volume,
                         playlists: this.playlists,
-                        playHistory: this.playHistory
-                    };
+                        playHistory: this.playHistory,
+                    qqUser: this.qqUser
+                };
                     localStorage.setItem('ciyuanMusicState', JSON.stringify(state));
                 } catch (error) {
                     console.warn('无法保存播放状态:', error);
@@ -3529,6 +4831,10 @@
                         // 恢复播放历史
                         if (state.playHistory) {
                             this.playHistory = state.playHistory;
+                        }
+                        
+                        if (state.qqUser) {
+                            this.qqUser = state.qqUser;
                         }
                         
                         // 恢复音量
@@ -3563,6 +4869,46 @@
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
+            }
+            
+            // QQ音乐 品牌图标 (base64)
+            _qqIconBase64() {
+                return 'data:image/x-icon;base64,' + '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NP9+wi3/Vst7/wfb+P8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//cB3P9SAdz/bwHc//0B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wDc//8A3P//A9z+/wrb+f9QzYr/gMIu/3XFRv8h1tP/ANz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz/+gHc/2AB3P93Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8A3P//KNXJ/3vFPv+Dwy3/Ss+U/wPc/v8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P/7Adz/ZgHc/3QB3P/+Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//ANz//wvb8v9mymb/iMIm/23IWv8T2ej/ANz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//sB3P9kAdz/ZwHc//sB3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8A3P//NdS4/4bEL/+GxDD/N9O1/wDc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz/+AHc/1kB3P9PAdz/9QHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//ANz//xLa6/9yyVv/kcMi/2bMb/8K2/X/ANz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P/vAdz/RQHc/yYB3P/XAdz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8C3P//SdGe/5LEJf+Jxjf/KtbL/wDc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc/84B3P8dAdz/BQHc/6gB3P//Adz//wHc//8B3P//Adz//wHc//8B3P//Adz//wHc//8B3P//ANz//x/Y3P+FyEP/l8Uh/1nPiP8E3P3/Adz//wHc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';
+            }
+            
+            // 网易云音乐 品牌图标 (base64)
+            _neteaseIconBase64() {
+                return 'data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwDdExsA3WMbAN2kGwDd0hsA3fMbAN3/GwDd/xsA3fMbAN3SGwDdpBsA3WMbAN0TAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwDdLhsA3acbAN36GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3fobAN2nGwDdLgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwDdDRsA3ZcbAN3+GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3+GwDdlxsA3Q0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsA3SsbAN3bGwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd2xsA3SsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAN04GwDd8RsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd8RsA3TgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwDdKxsA3fEbAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd8RsA3SsAAAAAAAAAAAAAAAAAAAAAAAAAABsA3Q0bAN3bGwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f9JM+T/mo7w/9PO+P/w7v3/9vX+/+fk+/+8tPX/eGjr/yYM3/8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd2xsA3Q0AAAAAAAAAAAAAAAAAAAAAGwDdlxsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f80HOH/urL1////////////////////////////////////////////8vD9/3pq6/8cAd3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDdlwAAAAAAAAAAAAAAABsA3S4bAN3+GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/TTjk//Du/f///////////87I+P+Ede3/W0jn/0455f9kUuj/nJDw/+7s/P///////////7Oq9P8gBt7/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3+GwDdLgAAAAAAAAAAGwDdpxsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/0Mt4//y8f3//////+rn/P9cSef/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/JQve/5yQ8P///////////6mf8v8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN2nAAAAABsA3RMbAN36GwDd/xsA3f8bAN3/GwDd/xsA3f8fBd7/2dX5///////h3fr/Mxvh/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/3tr6////////////2BN5/8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3fobAN0TGwDdYxsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/3ho6///////+/r+/0Er4/8bAN3/GwDd/xsA3f8xGeD/fGzr/4x+7v9pV+n/Iwne/xsA3f8bAN3/GwDd/7at9P//////z8n4/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3WMbAN2kGwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/1tH5//////+ekvD/GwDd/xsA3f8bAN3/b17q//j3/v/////////////////i3/v/Qizj/xsA3f8bAN3/RjDj////////////Mxvh/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDdpBsA3dIbAN3/GwDd/xsA3f8bAN3/GwDd/zMb4f///////////0Yw4/8bAN3/GwDd/0045P/9/f///////9TP+f+pn/L/6eb8///////c2Pr/IAbe/xsA3f8bAN3/7+39//////9dSuf/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3SGwDd8xsA3f8bAN3/GwDd/xsA3f8bAN3/W0jn///////y8P3/GwDd/xsA3f8bAN3/ubH1//////+yqfT/GwDd/xsA3f8uFeD/7ev8//////9bSOf/GwDd/xsA3f/h3fr//////2hW6P8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3fMbAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f9sW+n//////9vX+v8bAN3/GwDd/xsA3f/r6fz//////1A75f8bAN3/GwDd/xsA3f+3r/T//////39w7P8bAN3/HgPd//X0/v//////WUXm/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/19M5///////5eL7/xsA3f8bAN3/GwDd/+7s/P//////Szbk/xsA3f8bAN3/GwDd/8fA9///////c2Lq/xsA3f9YROb///////39//8sE+D/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd8xsA3f8bAN3/GwDd/xsA3f8bAN3/Qizj////////////LBPg/xsA3f8bAN3/wrv2//////+Vie//GwDd/xsA3f8jCd7/+Pf+//////9FL+P/IAbe/9DK+P//////vbX1/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3fMbAN3SGwDd/xsA3f8bAN3/GwDd/xsA3f8eA93/7Or8//////93Z+v/GwDd/xsA3f9lU+j///////v7/v9pV+n/GwDd/1xJ5///////6uf8/ykQ3/+3rvT///////z8//9GMOP/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd0hsA3aQbAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f+ajvD//////+Pg+/8kCt7/GwDd/xsA3f+0q/T////////////Jw/f/yML3///////u7Pz/8e/9////////////eWnr/xsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/xsA3f8bAN2kGwDdYxsA3f8bAN3/GwDd/xsA3f8bAN3/GwDd/zEZ4P/z8v3//////6+l8/8cAd3/GwDd/yAG3v+ajvD/+/r+////////////////////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';
+            }
+            
+            // 工具函数：获取来源标签HTML
+            getSourceBadgeHTML(song) {
+                if (!song) return '';
+                const src = song.source;
+                if (!src) return '';
+                
+                if (Array.isArray(src)) {
+                    return `<span class="source-badges">${src.map(s => {
+                        if (s === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                        if (s === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                        return '';
+                    }).join('')}</span>`;
+                }
+                
+                if (src === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                if (src === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                return '';
+            }
+            
+            // 工具函数：获取歌单来源标签HTML
+            getPlaylistSourceBadgeHTML(playlist) {
+                if (!playlist) return '';
+                const src = playlist.source;
+                if (!src || src === 'local') return '';
+                
+                if (src === 'qq') return `<span class="source-badge source-badge-lg source-badge-qq" title="QQ音乐歌单"><img src="${this._qqIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
+                if (src === 'netease') return `<span class="source-badge source-badge-lg source-badge-netease" title="网易云音乐歌单"><img src="${this._neteaseIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
+                return '';
             }
         }
         
