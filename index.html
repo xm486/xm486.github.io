@@ -6,8 +6,11 @@
   <title>Gal工具箱</title>
   <!-- 引入CSS文件 -->
   <link rel="stylesheet" href="css/index.css">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
- </head>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+   .friend-link-entry{text-align:center;margin:.4rem 0 1rem}.friend-link-toggle{padding:.35rem .9rem;border:1px solid #d8d2ff;border-radius:999px;background:#fff;color:#6c5ce7;font-size:.85rem;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08)}.friend-link-modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:10001;padding:1rem}.friend-link-modal.active{display:flex!important}.friend-link-dialog{position:relative;width:min(86vw,320px);background:#fff;border-radius:14px;padding:1rem;box-shadow:0 8px 28px rgba(0,0,0,.22)}.friend-link-close{position:absolute;top:.45rem;right:.6rem;border:none;background:transparent;font-size:1.4rem;line-height:1;color:#999;cursor:pointer}.friend-link-modal-title{font-size:1rem;font-weight:600;color:#2d3436;margin-bottom:.8rem;padding-right:1.5rem}.friend-link-item{display:flex;align-items:center;gap:.6rem;padding:.65rem;border-radius:10px;color:#333;text-decoration:none;transition:background .2s ease}.friend-link-item:hover{background:#f4f1ff}.friend-link-icon{width:28px;height:28px;border-radius:7px;object-fit:cover;flex-shrink:0;border:1px solid #e0e0e0;background:#fff}
+  </style>
+  </head>
  <body>
  <!-- Default Statcounter code for index web https://xm486.github.io/ -->
 <script type="text/javascript">
@@ -246,7 +249,28 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 	 </div>
 	</div>
    </div>
-  </div>
+
+   <!-- 友情链接入口 -->
+   <div class="friend-link-entry" style="text-align:center;margin:.4rem 0 1rem;">
+	<button type="button" class="friend-link-toggle" onclick="openFriendLinks()" style="padding:.35rem .9rem;border:1px solid #d8d2ff;border-radius:999px;background:#fff;color:#6c5ce7;font-size:.85rem;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08);">友情链接</button>
+   </div>
+
+   <!-- 友情链接弹窗 -->
+   <div class="friend-link-modal" id="friendLinkModal" onclick="closeFriendLinks(event)" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:10001;padding:1rem;">
+	<div class="friend-link-dialog" style="position:relative;width:min(86vw,320px);background:#fff;border-radius:14px;padding:1rem;box-shadow:0 8px 28px rgba(0,0,0,.22);">
+	 <button type="button" class="friend-link-close" onclick="closeFriendLinks()" style="position:absolute;top:.45rem;right:.6rem;border:none;background:transparent;font-size:1.4rem;line-height:1;color:#999;cursor:pointer;">×</button>
+	 <div class="friend-link-modal-title" style="font-size:1rem;font-weight:600;color:#2d3436;margin-bottom:.8rem;padding-right:1.5rem;">友情链接</div>
+	 <a href="https://xm486.kesug.com/" target="_blank" class="friend-link-item" style="display:flex;align-items:center;gap:.6rem;padding:.65rem;border-radius:10px;color:#333;text-decoration:none;">
+ <img class="friend-link-icon" src="https://xm486.kesug.com/image/favicon.ico" alt="次元音乐favicon" style="width:28px;height:28px;border-radius:7px;object-fit:cover;flex-shrink:0;border:1px solid #e0e0e0;background:#fff;">
+ <span>次元音乐</span>
+</a>
+<a href="https://xm486.github.io/music.html" target="_blank" class="friend-link-item" style="display:flex;align-items:center;gap:.6rem;padding:.65rem;border-radius:10px;color:#333;text-decoration:none;">
+ <img class="friend-link-icon" src="https://xm486.github.io/favicon.ico" alt="次元音乐favicon" style="width:28px;height:28px;border-radius:7px;object-fit:cover;flex-shrink:0;border:1px solid #e0e0e0;background:#fff;">
+ <span>次元音乐备用网址</span>
+</a>
+	</div>
+   </div>
+  
   <!--评论区-->
   <div style="background:rgba(122,236,219,0.3);;width: 70%; margin: 0 auto;border-radius:15px;">
   <h2 style="font-size: 22px;color: #3366ff;text-align: center;"><一一一留言板一一一></h2>
@@ -291,6 +315,20 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
    </audio>
   </div>
   <!-- 引入JS文件 -->
-  <script src="js/index.js"></script>
+   <script>
+	function openFriendLinks() {
+	 document.getElementById('friendLinkModal').style.display = 'flex';
+	}
+
+	function closeFriendLinks(event) {
+	 if (!event || event.target.id === 'friendLinkModal') {
+	  document.getElementById('friendLinkModal').style.display = 'none';
+	 }
+	}
+	document.addEventListener('keydown', function(e){
+	 if(e.key === 'Escape') closeFriendLinks();
+	});
+   </script>
+   <script src="js/index.js"></script>
  </body>
 </html>
