@@ -236,7 +236,7 @@ var sc_security="ac6d25b6";
 <script type="text/javascript"
 src="https://www.statcounter.com/counter/counter.js" async></script>
 <noscript><div class="statcounter"><a title="web statistics"
-href="https://statcounter.com/" target="_blank"><img class="statcounter"
+href="https://statcounter.com/" target="_blank"><img loading="lazy" class="statcounter"
 src="https://c.statcounter.com/13206107/0/ac6d25b6/1/" alt="web statistics"
 referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- End of Statcounter Code -->
@@ -244,11 +244,27 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 		<div class="chat-header">
 			AI聊天室
 			<div class="header-actions">
+				<button id="api-settings-toggle">API设置</button>
 				<button id="avatar-switch">切换头像</button>
 				<button id="clear-btn">清除记录</button>
 			</div>
 		</div>
-		<div class="chat-messages" id="chat-messages"></div>
+		<div id="api-settings" hidden style="padding:12px;background:#fff3f8;color:#333;">
+            <p style="margin:0 0 8px;"><strong>接口设置</strong>（任意 OpenAI 兼容接口）</p>
+            <label for="api-endpoint" style="font-size:13px;">接口地址</label>
+            <input id="api-endpoint" type="text" autocomplete="off" placeholder="https://api.example.com/v1/chat/completions" style="width:100%;box-sizing:border-box;margin:4px 0 8px;padding:6px 8px;">
+            <label for="api-model" style="font-size:13px;">模型名</label>
+            <input id="api-model" type="text" autocomplete="off" placeholder="例如 deepseek-ai/DeepSeek-R1-0528-Qwen3-8B" style="width:100%;box-sizing:border-box;margin:4px 0 8px;padding:6px 8px;">
+            <label for="api-key-input" style="font-size:13px;">API Key</label>
+            <input id="api-key-input" type="password" autocomplete="off" placeholder="填写你自己的 API Key" style="width:100%;box-sizing:border-box;margin:4px 0 8px;padding:6px 8px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input id="api-remember" type="checkbox" style="width:auto;margin:0;">记住在本机浏览器（下次自动填好）</label>
+            <div style="margin-top:8px;">
+                <button id="api-key-apply" type="button">应用</button>
+                <button id="api-key-clear" type="button">清除</button>
+            </div>
+            <small style="display:block;margin-top:8px;">只保存在本机浏览器；接口需要允许跨域（CORS）。聊天内容会发送到该接口，可能产生费用，请勿输入敏感信息。</small>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
 		<div class="chat-input-area">
 			<textarea id="message-input" placeholder="输入消息后按回车或点击发送..."></textarea>
 			<button id="send-button">✉️</button>
@@ -366,9 +382,10 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 		// ========== 核心配置 ==========
 		const CONFIG = {
 			api: {
-				apiKey: 'sk-ikautlvqenyzessdywpwmywjijwpgtdzrtmxbbaztavnwmhu', // 替换为真实API Key
+				apiKey: '', // 不写死共享密钥；由「API设置」填写并使用
 				model: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
-				endpoint: 'https://api.siliconflow.cn/v1/chat/completions'
+				endpoint: 'https://api.siliconflow.cn/v1/chat/completions',
+				storeKey: 'gal_toolbox_api_settings'
 			},
 			systemPrompt: {
 			role:'system',
@@ -393,7 +410,7 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(initHistory));
 			}
 			loadChatHistory();
-			updateAvatar(); // 初始化头像
+			// loadChatHistory() 已按 CONFIG.currentAvatarIndex 渲染头像。
 		}
 
 		// 2. 加载历史记录 - 修复DOM渲染顺序
@@ -431,7 +448,10 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 					contentEl.textContent = content;
 				}
 			} else {
-				messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
+				const userContent = document.createElement('div');
+                userContent.className = 'message-content';
+                userContent.textContent = content;
+                messageDiv.appendChild(userContent);
 			}
 			chatMessages.appendChild(messageDiv);
 			chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -483,6 +503,14 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 		async function sendMessage() {
 			const content = messageInput.value.trim();
 			if (!content) return;
+            if (!CONFIG.api.endpoint || !CONFIG.api.apiKey) {
+                document.getElementById('api-settings').hidden = false;
+                fillApiForm();
+                alert('请先在「API设置」里填写接口地址、模型名和 Key');
+                return;
+            }
+            if (sendButton.disabled) return;
+            sendButton.disabled = true;
 
 			// 先渲染用户消息
 			renderMessage('user', content, false);
@@ -517,25 +545,23 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 					body: JSON.stringify(requestBody)
 				});
 
-				chatMessages.removeChild(loadingDiv); // 移除加载提示
+				if (loadingDiv.parentNode) loadingDiv.remove(); // 移除加载提示
 
 				if (!response.ok) throw new Error(`接口错误 ${response.status}`);
 				const data = await response.json();
 				
-				if (data.choices && data.choices.length > 0) {
-					const aiReply = data.choices[0].message.content;
+				const aiReply = extractReply(data);
 					renderMessage('ai', aiReply);
 					saveChatMessage('ai', aiReply);
-				} else {
-					throw new Error('无返回结果');
-				}
 			} catch (error) {
 				console.error('请求失败:', error);
-				chatMessages.removeChild(loadingDiv);
+				if (loadingDiv.parentNode) loadingDiv.remove();
 				const errorMsg = '呜喵~ 接口好像出问题了，主人再试一次嘛~';
 				renderMessage('ai', errorMsg);
 				saveChatMessage('ai', errorMsg);
-			}
+			} finally {
+                sendButton.disabled = false;
+            }
 		}
 
 		// ========== 事件绑定 - 确保DOM加载完成 ==========
@@ -545,7 +571,71 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 			this.style.height = (this.scrollHeight) + 'px';
 		});
 
-		// 发送按钮点击
+		// ========== 自定义接口设置（接口地址 / 模型 / Key） ==========
+        function readStoredApi() {
+            try { return JSON.parse(localStorage.getItem(CONFIG.api.storeKey) || '{}') || {}; } catch (e) { return {}; }
+        }
+        function loadApiSettings() {
+            const saved = readStoredApi();
+            if (saved.endpoint) CONFIG.api.endpoint = saved.endpoint;
+            if (saved.model) CONFIG.api.model = saved.model;
+            if (saved.apiKey) CONFIG.api.apiKey = saved.apiKey;
+        }
+        function fillApiForm() {
+            document.getElementById('api-endpoint').value = CONFIG.api.endpoint || '';
+            document.getElementById('api-model').value = CONFIG.api.model || '';
+            document.getElementById('api-key-input').value = CONFIG.api.apiKey || '';
+            const saved = readStoredApi();
+            document.getElementById('api-remember').checked = !!(saved.endpoint || saved.apiKey);
+        }
+        function applyApiSettings() {
+            const endpoint = document.getElementById('api-endpoint').value.trim();
+            const model = document.getElementById('api-model').value.trim();
+            const apiKey = document.getElementById('api-key-input').value.trim();
+            if (!/^https?:\/\//i.test(endpoint)) { alert('接口地址要以 http:// 或 https:// 开头'); return; }
+            if (!model) { alert('请填写模型名'); return; }
+            if (!apiKey) { alert('请填写 API Key'); return; }
+            CONFIG.api.endpoint = endpoint;
+            CONFIG.api.model = model;
+            CONFIG.api.apiKey = apiKey;
+            try {
+                if (document.getElementById('api-remember').checked) {
+                    localStorage.setItem(CONFIG.api.storeKey, JSON.stringify({ endpoint: endpoint, model: model, apiKey: apiKey }));
+                } else {
+                    localStorage.removeItem(CONFIG.api.storeKey);
+                }
+            } catch (e) { }
+            document.getElementById('api-settings').hidden = true;
+        }
+        // 兼容 OpenAI 风格与常见变体：choices[0].message.content / text / reply / content / answer / output
+        function extractReply(data) {
+            const choices = data && data.choices;
+            if (choices && choices.length) {
+                const first = choices[0] || {};
+                const message = first.message || {};
+                const value = message.content || first.text;
+                if (typeof value === 'string' && value.trim()) return value.trim();
+            }
+            const flat = [data && data.reply, data && data.content, data && data.answer,
+                data && data.output, data && data.data && data.data.content];
+            for (let i = 0; i < flat.length; i++) {
+                if (typeof flat[i] === 'string' && flat[i].trim()) return flat[i].trim();
+            }
+            throw new Error('无法从接口返回中解析回复，请检查接口地址与返回格式');
+        }
+        document.getElementById('api-settings-toggle').addEventListener('click', () => {
+            const settings = document.getElementById('api-settings');
+            settings.hidden = !settings.hidden;
+            if (!settings.hidden) fillApiForm();
+        });
+        document.getElementById('api-key-apply').addEventListener('click', applyApiSettings);
+        document.getElementById('api-key-clear').addEventListener('click', () => {
+            CONFIG.api.apiKey = '';
+            try { localStorage.removeItem(CONFIG.api.storeKey); } catch (e) { }
+            fillApiForm();
+            alert('已清除本机保存的接口设置');
+        });
+        		// 发送按钮点击
 		sendButton.addEventListener('click', sendMessage);
 
 		// 回车发送
@@ -566,6 +656,7 @@ AI: 哇！是小锦！贴贴～(扑上去) 今天软乎乎的也好可爱呢～
 		});
 
 		// ========== 页面加载时初始化 ==========
+		loadApiSettings();
 		window.addEventListener('load', initChat);
 	</script>
 </body>

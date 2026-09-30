@@ -1,19 +1,135 @@
-<!--雪花js-->
-	    function createSnowflakes() {
-			const container = document.getElementById('snow-container');
-			const snowflakeCount = 50;
-			for (let i = 0; i < snowflakeCount; i++) {
-				const snowflake = document.createElement('div');
-				snowflake.className = 'snowflake';
-				snowflake.style.left = `${Math.random() * 100}%`;
-				snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
-				snowflake.style.opacity = `${Math.random() * 0.5 + 0.3}`;
-				snowflake.style.width = `${Math.random() * 10 + 5}px`;
-				snowflake.style.height = snowflake.style.width;
-				container.appendChild(snowflake);
-			}
-		}
-		window.onload = createSnowflakes;
+// 雪花特效（canvas 版：1 个画布替代 50 个 DOM 节点，移动端更省显存/电量）
+function createSnowflakeSprite() {
+    const S = 32;
+    const sp = document.createElement('canvas');
+    sp.width = sp.height = S;
+    const sc = sp.getContext('2d');
+    const g = sc.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+    g.addColorStop(0, 'rgba(224, 247, 250, 1)');
+    g.addColorStop(0.6, 'rgba(224, 247, 250, 0.92)');
+    g.addColorStop(1, 'rgba(224, 247, 250, 0)');
+    sc.fillStyle = g;
+    sc.beginPath();
+    sc.arc(S / 2, S / 2, S / 2, 0, Math.PI * 2);
+    sc.fill();
+    return sp;
+}
+
+// 兜底：环境不支持 canvas 时，沿用原来的 DOM 雪花
+function createSnowflakesLegacy(container) {
+    const count = 50;
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.style.left = `${Math.random() * 100}%`;
+        flake.style.animationDuration = `${Math.random() * 10 + 5}s`;
+        flake.style.opacity = `${Math.random() * 0.5 + 0.3}`;
+        flake.style.width = `${Math.random() * 10 + 5}px`;
+        flake.style.height = flake.style.width;
+        container.appendChild(flake);
+    }
+}
+
+function createSnowflakes() {
+    const container = document.getElementById('snow-container');
+    if (!container) return;
+
+    // 尊重系统“减少动态效果”偏好
+    const mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    if (mq && mq.matches) return;
+
+    const board = document.createElement('canvas');
+    const ctx = board.getContext ? board.getContext('2d') : null;
+    if (!ctx) { createSnowflakesLegacy(container); return; }
+
+    const COUNT = 50;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const sprite = createSnowflakeSprite();
+    let W = 0, H = 0, flakes = [];
+
+    board.className = 'snow-canvas';
+    board.style.display = 'block';
+    board.style.width = '100%';
+    board.style.height = '100%';
+    container.appendChild(board);
+
+    function sizeCanvas() {
+        board.width = Math.round(W * DPR);
+        board.height = Math.round(H * DPR);
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+
+    function seed() {
+        flakes = [];
+        for (let i = 0; i < COUNT; i++) {
+            const size = Math.random() * 10 + 5;    // 5-15px，与原版一致
+            flakes.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                r: size / 2,
+                alpha: Math.random() * 0.5 + 0.3,   // 0.3-0.8，与原版一致
+                rate: 1 / (Math.random() * 10 + 5)  // 每秒下落多少屏，等价于 5-15s 落满一屏
+            });
+        }
+    }
+
+    function layout() {
+        const nw = window.innerWidth;
+        const nh = window.innerHeight;
+        if (W === 0) {                       // 首次初始化
+            W = nw; H = nh;
+            sizeCanvas(); seed();
+            return;
+        }
+        // 手机地址栏收起/展开只会小幅改变高度。
+        // 这里必须忽略：否则上下滑动时地址栏动画会不断触发 resize，
+        // 导致雪花被反复重新随机（看起来就是“闪一下 / 突然变快”）。
+        if (nw === W && Math.abs(nh - H) <= 150) {
+            H = nh;                          // 只更新画布尺寸，保留雪花位置
+            sizeCanvas();
+            return;
+        }
+        // 真正的尺寸变化（旋转屏幕/缩窗口）：按比例平移，保持连续性，不重新随机
+        const sx = nw / W, sy = nh / H;
+        for (let i = 0; i < flakes.length; i++) {
+            flakes[i].x *= sx;
+            flakes[i].y *= sy;
+        }
+        W = nw; H = nh;
+        sizeCanvas();
+    }
+
+    layout();
+    window.addEventListener('resize', layout);
+    window.addEventListener('orientationchange', layout);
+
+    let last = 0;
+    function frame(ts) {
+        let dt = last ? (ts - last) / 1000 : 0;   // 换算成秒
+        last = ts;
+        // 卡顿或从后台切回时不要“追帧”，否则雪花会瞬移一段距离
+        if (dt > 0.1) dt = 0.1;
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < COUNT; i++) {
+            const f = flakes[i];
+            f.y += f.rate * H * dt;
+            if (f.y - f.r > H) {
+                f.y = -f.r;
+                f.x = Math.random() * W;
+            }
+            ctx.globalAlpha = f.alpha;
+            ctx.drawImage(sprite, f.x - f.r * 1.6, f.y - f.r * 1.6, f.r * 3.2, f.r * 3.2);
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
+
+window.addEventListener('load', createSnowflakes);
+		// 标签映射表缓存（避免每次查询都重建大对象）
+		let __tagMapCache = null;
+
 		// 配置项
 		const CONFIG = {
 			TRANSLATE_API: "https://api.pearktrue.cn/api/translate/ai"
@@ -23,7 +139,7 @@
 		const gameInput = document.getElementById("gameInput");
 		const searchResultArea = document.getElementById("searchResultArea");
 		const detailArea = document.getElementById("detailArea");
-		const searchBtn = document.querySelector(".btn:not(.reset-btn)");
+		const searchBtn = document.getElementById("searchBtn");
 		const coverModal = document.getElementById("coverModal");
 		const modalImage = document.getElementById("modalImage");
 		const coverLoading = document.getElementById("coverLoading");
@@ -82,7 +198,10 @@
 			if (!desc) return "无简介";
 			
 			try {
-				const pearkRes = await fetch(`${CONFIG.TRANSLATE_API}?text=${encodeURIComponent(desc)}`);
+				const pearkRes = await fetch(`${CONFIG.TRANSLATE_API}?text=${encodeURIComponent(desc)}`, {
+				signal: AbortSignal.timeout(8000)
+			});
+			if (!pearkRes.ok) throw new Error(`翻译接口异常：${pearkRes.status}`);
 				const pearkData = await pearkRes.json();
 				let result = pearkData.data?.trim() || desc.trim();
 				// 使用智能清理函数
@@ -186,7 +305,7 @@
 				
 				// 新增：标签中英文映射表（可根据需求扩展）
 // 新增：完整VNDB标签中英文映射表
-const TAG_TRANSLATE_MAP = {
+const TAG_TRANSLATE_MAP = (__tagMapCache || (__tagMapCache = {
   // 类型类
   "ADV": "文字冒险",
   "VN": "视觉小说",
@@ -290,7 +409,7 @@ const TAG_TRANSLATE_MAP = {
    "Protagonist with Voice Acting": "主角有配音",
    "Amnesia": "失忆",
    "Graphic Violence": "血腥暴力"
-};
+}));
 
 // 处理游戏标签（替换原有逻辑）
 const tagsContainer = document.getElementById("detailTags");
@@ -301,7 +420,8 @@ if (game.tags && game.tags.length > 0) {
 	const tagName = TAG_TRANSLATE_MAP[tag.name] || tag.name;
 	// 标签 spoiler 等级说明：0=无剧透，1=轻度，2=重度
 	const spoilerText = tag.spoiler === 0 ? '（无剧透）' : tag.spoiler === 1 ? '（轻度剧透）' : '（重度剧透）';
-	tagsHtml += `<span class="tag-item" title="评分：${tag.rating.toFixed(1)} ${spoilerText}">${tagName}</span>`;
+	const ratingText = typeof tag.rating === "number" ? tag.rating.toFixed(1) : "暂无";
+	tagsHtml += `<span class="tag-item" title="评分：${ratingText} ${spoilerText}">${tagName}</span>`;
   });
   tagsHtml += '</div><div class="tag-note">标签评分：0-3分（越高越贴合）</div>';
   tagsContainer.innerHTML = tagsHtml;
@@ -473,3 +593,17 @@ floatPlayer.addEventListener('ended', () => {
   playerContainer.classList.remove('playing');
   playerText.innerHTML = '<span class="player-title">▶️ 播放结束：</span>二人のクロニクル';
 });
+
+// AI聊天板块：浏览器不支持 WebM/VP9 时，回退到原始 GIF 背景（兼容性保底）
+(function () {
+	var panel = document.querySelector('.ai-chat-panel');
+	var video = document.querySelector('.ai-chat-panel-bg');
+	if (!panel || !video) return;
+	var probe = document.createElement('video');
+	if (!probe.canPlayType('video/webm; codecs="vp9"') && !probe.canPlayType('video/webm')) {
+		panel.style.backgroundImage = "url('image/ttk.gif')";
+		panel.style.backgroundSize = '100% auto';
+		panel.style.backgroundRepeat = 'no-repeat';
+		video.parentNode.removeChild(video);
+	}
+})();

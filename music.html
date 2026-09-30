@@ -3142,7 +3142,7 @@
                     gridHtml += `
                         <div class="recommend-card" data-song-id="${song.id}">
                             <div class="card-cover">
-                                <img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
+                                <img loading="lazy" src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                      onerror="this.src='${defaultCover}'; this.onerror=null;">
                                 <div class="card-play-icon">
                                     <span class="icon-svg icon-md"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
@@ -3165,7 +3165,7 @@
                         <div class="song-item" data-index="${index}" data-source="home">
                             <span class="song-index">${index + 1}</span>
                             <div class="song-cover">
-                                <img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
+                                <img loading="lazy" src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                      onerror="this.src='${defaultCover}'; this.onerror=null;">
                             </div>
                             <div class="song-info">
@@ -3261,7 +3261,7 @@
                             <div class="song-item" data-index="${index}" data-source="playlist:${playlistId}">
                                 <span class="song-index">${index + 1}</span>
                                 <div class="song-cover">
-                                    <img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
+                                    <img loading="lazy" src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                          onerror="this.style.display='none';">
                                 </div>
                                 <div class="song-info">
@@ -3560,7 +3560,7 @@
                             <span class="song-index">${index + 1}</span>
                             <div class="song-cover">
                                 ${song.coverUrl ? 
-                                    `<img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
+                                    `<img loading="lazy" src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                          onerror="this.style.display='none';">` :
                                     `<span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>`
                                 }
@@ -4122,7 +4122,7 @@
                 if (this.qqUser) {
                     const card = document.getElementById('profileLoginCard');
                     if (card) card.classList.add('logged-in');
-                    this.elements.profileAvatar.innerHTML = `<img src="${this.qqUser.avatarUrl}" alt="${this.escapeHtml(this.qqUser.nickname)}" onerror="this.style.display='none';">`;
+                    this.elements.profileAvatar.innerHTML = `<img loading="lazy" src="${this.qqUser.avatarUrl}" alt="${this.escapeHtml(this.qqUser.nickname)}" onerror="this.style.display='none';">`;
                     this.elements.profileName.textContent = this.qqUser.nickname || `QQ ${this.qqUser.qq}`;
                     this.elements.profileSubtitle.textContent = this.qqUser.nicknameManual
                         ? `QQ ${this.qqUser.qq} · 使用自定义昵称`
@@ -4166,7 +4166,7 @@
                             <span class="song-index">${index + 1}</span>
                             <div class="song-cover">
                                 ${song.coverUrl ? 
-                                    `<img src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
+                                    `<img loading="lazy" src="${song.coverUrl}" alt="${this.escapeHtml(song.name)}" 
                                          onerror="this.style.display='none';">` :
                                     `<span class="icon-svg icon-lg"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>`
                                 }
@@ -5038,14 +5038,14 @@
             updateCoverImage(coverUrl) {
                 // 更新迷你播放器封面
                 if (coverUrl) {
-                this.elements.miniCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
+                this.elements.miniCover.innerHTML = `<img loading="lazy" src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
             } else {
                 this.elements.miniCover.innerHTML = '<span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>';
             }
             
             // 更新全屏播放器封面
             if (coverUrl) {
-                this.elements.fullCover.innerHTML = `<img src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
+                this.elements.fullCover.innerHTML = `<img loading="lazy" src="${coverUrl}" alt="封面" onerror="this.style.display='none';">`;
             } else {
                 this.elements.fullCover.innerHTML = '<span class="icon-svg icon-xl"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></span>';
             }
@@ -5299,14 +5299,14 @@
                 
                 if (Array.isArray(src)) {
                     return `<span class="source-badges">${src.map(s => {
-                        if (s === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
-                        if (s === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                        if (s === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img loading="lazy" src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                        if (s === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img loading="lazy" src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
                         return '';
                     }).join('')}</span>`;
                 }
                 
-                if (src === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
-                if (src === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                if (src === 'qq') return `<span class="source-badge source-badge-qq" title="QQ音乐"><img loading="lazy" src="${this._qqIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
+                if (src === 'netease') return `<span class="source-badge source-badge-netease" title="网易云音乐"><img loading="lazy" src="${this._neteaseIconBase64()}" style="width:14px;height:14px;border-radius:50%;" /></span>`;
                 return '';
             }
             
@@ -5316,8 +5316,8 @@
                 const src = playlist.source;
                 if (!src || src === 'local') return '';
                 
-                if (src === 'qq') return `<span class="source-badge source-badge-lg source-badge-qq" title="QQ音乐歌单"><img src="${this._qqIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
-                if (src === 'netease') return `<span class="source-badge source-badge-lg source-badge-netease" title="网易云音乐歌单"><img src="${this._neteaseIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
+                if (src === 'qq') return `<span class="source-badge source-badge-lg source-badge-qq" title="QQ音乐歌单"><img loading="lazy" src="${this._qqIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
+                if (src === 'netease') return `<span class="source-badge source-badge-lg source-badge-netease" title="网易云音乐歌单"><img loading="lazy" src="${this._neteaseIconBase64()}" style="width:18px;height:18px;border-radius:50%;" /></span>`;
                 return '';
             }
         }

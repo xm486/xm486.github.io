@@ -655,6 +655,72 @@
   color: #999;
   margin-top: 0.3rem;
 }
+/* 留言板标题（替代 <一一一留言板一一一> 的装饰线版本） */
+.msg-board-wrapper {
+	background: rgba(122, 236, 219, 0.3);
+	width: 70%;
+	margin: 0 auto;
+	border-radius: 15px;
+}
+
+.msg-board-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	font-size: 17px;
+	letter-spacing: 1px;
+	line-height: 1.4;
+	color: #3366ff;
+	text-align: center;
+	padding: 0.6rem 1rem;
+}
+
+.msg-board-title > span {
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+
+.msg-board-title::before,
+.msg-board-title::after {
+	content: "";
+	flex: 1 1 auto;
+	min-width: 10px;
+	max-width: 64px;
+	height: 2px;
+	border-radius: 2px;
+}
+
+.msg-board-title::before {
+	background: linear-gradient(90deg, transparent, #3366ff);
+}
+
+.msg-board-title::after {
+	background: linear-gradient(90deg, #3366ff, transparent);
+}
+
 .tag-item:hover {
   background: #e0d4ff;
+}
+
+/* AI聊天板块：动图背景改用 <video>（原 690KB GIF -> 58KB VP9） */
+.ai-chat-panel {
+	position: relative;
+	overflow: hidden;
+}
+
+.ai-chat-panel-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+	z-index: 0;
+	pointer-events: none;
+}
+
+.ai-chat-panel > img,
+.ai-chat-panel > form {
+	position: relative;
+	z-index: 1;
 }

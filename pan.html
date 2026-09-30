@@ -32,9 +32,9 @@ button:hover{opacity:.9}
   <h2>网盘转换 & 解加密工具</h2>
 
   <div class="tab">
-	<button class="tab-btn active" onclick="goTab('pan')">网盘转换</button>
-	<button class="tab-btn" onclick="goTab('base64')">Base64</button>
-	<button class="tab-btn" onclick="goTab('roar')">兽音译者</button>
+	<button class="tab-btn active" onclick="goTab('pan', this)">网盘转换</button>
+	<button class="tab-btn" onclick="goTab('base64', this)">Base64</button>
+	<button class="tab-btn" onclick="goTab('roar', this)">兽音译者</button>
   </div>
 
   <!-- 网盘 -->
@@ -87,11 +87,11 @@ button:hover{opacity:.9}
 let current = { pan: "", base64: "", roar: "" }
 
 // 标签页切换
-function goTab(id) {
+function goTab(id, btn) {
   document.querySelectorAll('.page').forEach(e => e.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'))
   document.getElementById(id).classList.add('active')
-  event.target.classList.add('active')
+  if (btn) btn.classList.add('active')
 }
 
 // ================== 网盘转换 ==================
@@ -234,7 +234,22 @@ function doDecode() {
 function copy(which) {
   const txt = current[which]
   if (!txt) return alert('无内容可复制')
-  navigator.clipboard.writeText(txt).then(() => alert('复制成功！')).catch(() => alert('复制失败'))
+  // 某些 Android WebView / 非安全上下文不提供 navigator.clipboard，回退到用户点击触发的 execCommand。
+  const fallback = () => {
+    const input = document.createElement('textarea')
+    input.value = txt
+    input.style.position = 'fixed'
+    input.style.opacity = '0'
+    document.body.appendChild(input)
+    input.select()
+    let ok = false
+    try { ok = document.execCommand('copy') } catch (e) { }
+    input.remove()
+    alert(ok ? '复制成功！' : '复制失败，请长按结果手动复制')
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => alert('复制成功！')).catch(fallback)
+  } else fallback()
 }
 </script>
 </body>
